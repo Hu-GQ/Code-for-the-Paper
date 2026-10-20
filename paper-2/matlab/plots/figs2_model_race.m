@@ -5,7 +5,7 @@ function figs2_model_race()
 %   the early Python pipeline (step8_candidates.py). Read as-is and labelled
 %   as such on the figure; NOT re-derived in MATLAB (the MATLAB-side family
 %   comparison lives in calibration.md with the same ordering).
-%   Claims: CL-10.
+%   Claims: the statement.
 
 pp_util('style');
 d = pp_util('dirs');

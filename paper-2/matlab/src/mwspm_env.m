@@ -4,7 +4,7 @@ function e = mwspm_env()
 %   Records the MATLAB release, platform, JVM availability, the products the
 %   project actually relies on and whether the solver / optimiser entry points
 %   exist.  It does NOT dump the full environment, PATH or any credential
-%   (protocols/PROJECT_RULES.md hard constraint 5).
+%   (the project record hard constraint 5).
 
 e.matlab_version = version();
 e.release        = version('-release');

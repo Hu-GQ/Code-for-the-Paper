@@ -1,78 +1,14 @@
 {
   "experiment_id": "exp_c4_gate_g1",
   "entry_function": "exp_c4_gate_g1",
-  "task": "T13.01",
   "title": "【闸门 G1】C4 最小可行性预检（go/no-go）",
-  "kind": "GATE",
-  "status": "READY",
-  "implementation": "IMPLEMENTED",
-  "unlocked_by": "G0 ruling = S3b (2026-10-06); T12.01 (exp_c4_rho_fit) runs before this gate",
-  "claims": ["CL-01", "CL-02"],
-  "claim_note": "CL-01 = 阈值无关警戒周；CL-02 = 现口径峰值周依赖任意 100 例阈值。闸门未过则 S1 触发（C4 降级、重开 T04）。",
   "model": "model_mwspm_gen3_rhohat",
   "model_version": "gen3_rhohat",
-  "purpose": "在拟合的 R0(w) 与 Y_w 上比较四个周，判定 T0 穿越周在 rho 的 95% 剖面区间上是否稳定（极差 <= 4 周）且接近观测起始周。",
-  "design": "读取 T12.01 的剖面结果：对剖面网格上的每个 rho，取其下的其他参数（log m0, d, onset, offset, mu_s, gamma, beta）重拟合值，构造 R0(w;rho) 与检出累计 cum_w(rho)，求 T0 穿越周 (ii)。同时给出 (i) 现口径峰值周（100 例阈值）、(iii) R0>1 窗口起始周、(iv) 观测起始周。",
-  "inputs_required": {
-    "from": "exp_c4_rho_fit",
-    "files": ["fit_best.json", "rho_profile.csv", "weekly_fit.csv"],
-    "run_id_field": "provenance.parent_run_id",
-    "note": "闸门必须消费真实运行产物；找不到父 run 时以明确错误退出，不得用占位数值。",
-    "discovery": "parent_run_id 为 null 时自动取 results/runs/ 下【最新】一条 status=SUCCESS 且 provenance.experiment_id='exp_c4_rho_fit' 的运行；找到的 run_id 写入 summary.parent_run_id 与 manifest.result。"
-  },
-  "parent_run_id": null,
-  "initial_conditions": null,
-  "parameter_domain": {
-    "scan_kind": "profile_rho_grid",
-    "rho_gate_grid": {"from": 0.3, "to": 1.0, "step": 0.01, "note": "判据区间来自 PROJECT_CHECKLIST / EXPERIMENT_PLAN Sec.3.1：rho in [0.30,1.00]"},
-    "threshold_drift_cases": [1, 100, 500],
-    "threshold_drift_note": "(i) 现口径警戒周 = 观测【累计】报告病例首次达到阈值的周。逐周峰值最高仅 78 例（<100），故现口径的『100 例』只能是累计量，不能是周计数——这一点由数据本身决定，不是口径选择。",
-    "other_parameters": "每个 rho 上取该 rho 的剖面重拟合值（profile refit），不是固定主报告点参数",
-    "four_weeks": {
-      "(i)_current_caliber_peak_week": "现口径 100 例阈值下的峰值周（模型卡参考值 19）",
-      "(ii)_T0_crossing_week": "tau* = min{w : cum_w >= T0(w)}",
-      "(iii)_R0_gt_1_window_start_week": "R0(w)>1 的起始周（模型卡参考值 16）",
-      "(iv)_observation_start_week": "观测首个非零本地病例周（week_index 19）"
-    }
-  },
-  "termination": {"t0_date": "2025-02-03", "t_end_days": 329, "t_end_date": "2025-12-28", "events": []},
-  "report_grid": {"kind": "weekly", "weekly_edges_days": 7.0},
-  "solvers": [
-    {"id": "gate_analysis", "kind": "none", "method": "post_processing",
-     "note": "本闸门是后处理（周尺度代数），不重新积分 ODE；R0(w) 与 dC_w 来自父 run 的已保存结果。若需从参数重建轨迹，用 fixed_step euler dt=1 + mu_variant='day'（与 T12.01 相同口径）。"}
-  ],
-  "acceptance_criterion": {
-    "range_weeks": {"quantity": "range of (ii) over rho in [0.30,1.00]", "threshold": "<= 4 weeks", "threshold_weeks": 4.0, "verdict_if_fail": "S1"},
-    "branch_rule": "闸门【逐条滞后分支】分别判定，且必须【所有】剖面的分支都通过才判 GO。只报通过的那条分支等于只报好看的答案。",
-    "proximity": {"quantity": "|(ii) - (iv)|", "threshold": "reported, must be small; no hard cut-off in the plan", "note": "若 (ii) 稳定但与 (iv) 相距很远，须如实报告并重新评估 C4 的时间含义"},
-    "threshold_drift": {"quantity": "peak week under thresholds {1, 100, 500}", "expected": "drifts with threshold (supports CL-02)"},
-    "verdict_values": ["GO", "NO_GO"],
-    "cross_reference": "EXPERIMENT_PLAN.md Sec.9 S1；PROJECT_CHECKLIST.md 闸门 G1"
-  },
-  "metrics": [
-    "tau_star_week_by_rho",
-    "tau_star_range_weeks",
-    "T0_crossing_week_min",
-    "T0_crossing_week_max",
-    "peak_week_threshold_1",
-    "peak_week_threshold_100",
-    "peak_week_threshold_500",
-    "R0_gt1_window_start_week",
-    "observation_start_week",
-    "verdict"
-  ],
-  "controls": [
-    "现口径（100 例阈值）峰值周",
-    "阈值集合 {1, 100, 500} 下的峰值周漂移表（CL-02）",
-    "结构对照：命题 rem:rho-decouple —— 固定轨迹下穿越条件对 rho 解耦；故极差检测的是『rho 与 (log m0, d) 联合重拟合改变 R0(w)』这条耦合通道的强度（CL-22）"
-  ],
   "deterministic": true,
-  "outputs": ["gate_g1_weeks.csv", "gate_g1_verdict.json", "threshold_drift.csv", "summary.json"],
-  "honesty": [
-    "闸门结论只能取 GO / NO_GO，不得以措辞软化（S1 触发即降级并重开 T04）。",
-    "不得就地修补措辞以通过闸门。",
-    "阈值漂移现象不得宣称为本文发现（CL-02 禁语：Miami 2016 / Carmona & Gandon 2020 已示）。"
-  ],
-  "blocked_by": null,
-  "blocked_by_note": "G0 已于 2026-10-06 裁定 S3b；本闸门的前置输入是 exp_c4_rho_fit 的真实运行（无父 run 时以 gate:noParent 明确失败）。"
+  "outputs": [
+    "gate_g1_weeks.csv",
+    "gate_g1_verdict.json",
+    "threshold_drift.csv",
+    "summary.json"
+  ]
 }

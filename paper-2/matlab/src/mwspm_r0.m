@@ -9,7 +9,7 @@ function [R0, tr] = mwspm_r0(T, m, mu, gamma_h, opts)
 %     mu       adult mosquito mortality rate(s), 1/day   (mu = mu_s*mu_v_raw)
 %     gamma_h  human recovery rate, 1/day
 %     opts.coef  optional thermal-coefficient override forwarded to
-%                mwspm_thermal_traits (T14.02 trait sensitivity); default OFF
+%                mwspm_thermal_traits (the analysis trait sensitivity); default OFF
 %
 %     R0 = sqrt( m * a^2 * b * c * sigma_v / ( gamma_h * mu * (mu + sigma_v) ) )
 %
@@ -21,7 +21,7 @@ function [R0, tr] = mwspm_r0(T, m, mu, gamma_h, opts)
 %     2. mu must be the CONTINUOUS mortality rate (variant 'raw'), never the
 %        daily-corrected variant;
 %     3. the vector-abundance caliber (N_v vs V) must be stated - see
-%        mwspm_r0_timeseries and CL-16/T07.01.
+%        mwspm_r0_timeseries and the statement/the analysis.
 %
 %   sigma_h cancels out of R0 (the exposed human eventually becomes
 %   infectious), which is verified symbolically in

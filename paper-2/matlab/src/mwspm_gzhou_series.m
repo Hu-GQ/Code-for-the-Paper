@@ -1,5 +1,5 @@
 function mwspm_gzhou_series(root)
-%MWSPM_GZHOU_SERIES  Export the T12.01-caliber daily series for cor:gzhou.
+%MWSPM_GZHOU_SERIES  Export the the analysis-caliber daily series for cor:gzhou.
 %
 %   mwspm_gzhou_series()          auto-locate the project root
 %   mwspm_gzhou_series(root)      explicit root
@@ -12,14 +12,14 @@ function mwspm_gzhou_series(root)
 %   uses the daily-corrected mortality variant thermal_traits_day instead of the
 %   continuous 'raw' variant that R0(t) / the envelope / Floquet must use.
 %
-%   This helper recomputes the exact daily series under the T12.01 MAIN REPORT
+%   This helper recomputes the exact daily series under the the analysis MAIN REPORT
 %   POINT (d=1) using the authoritative mwspm_season / mwspm_thermal_traits('raw')
 %   / mwspm_r0 caliber, and writes it to
 %       theory/derivations/gzhou_t1201_daily_series.csv
 %   for step20_gzhou_t1201.py to consume.  It changes NO production code and
 %   touches no experiment run; it is a read-only derivation aid.
 %
-%   The recomputed max R0 must equal the T14.02 baseline R0_max = 3.5569
+%   The recomputed max R0 must equal the the analysis baseline R0_max = 3.5569
 %   (run 20261007T155558_86f11a38, parent fit 20261006T012933_c2b62344).
 
 if nargin < 1 || isempty(root)
@@ -36,7 +36,7 @@ fitPath   = fullfile(root, 'results', 'runs', '20261006T012933_c2b62344', ...
 fit = mwspm_readjson(fitPath);
 th  = fit.main_report_point.theta;
 assert(double(th.d_weeks) == 1, 'mwspm:gzhou', ...
-    'expected the T12.01 main report point (d=1), got d=%d', double(th.d_weeks));
+    'expected the the analysis main report point (d=1), got d=%d', double(th.d_weeks));
 
 D = mwspm_load_data(root, modelCard);
 p = mwspm_params(modelCard);

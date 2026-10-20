@@ -4,7 +4,7 @@ function sel = mwspm_pick_solver(stiff, cfg)
 %   sel = mwspm_pick_solver(stiff, cfg)
 %
 %   The rule is explicit and logged, so that "solver was chosen according to
-%   stiffness and model type" is an auditable statement rather than a claim:
+%   stiffness and model type" is an auditable statement rather than a statement:
 %
 %     stiffness_ratio > cfg.stiffness_ratio_threshold   ->  stiff method
 %     otherwise                                         ->  non-stiff method

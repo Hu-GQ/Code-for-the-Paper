@@ -1,15 +1,9 @@
 {
   "experiment_id": "exp_r2_trait_fixed",
   "entry_function": "exp_r2_trait_pure",
-  "task": "T12.R2b2",
-  "title": "Major revision R2b2: trait substitution at a common reporting ratio",
-  "kind": "EXPERIMENT",
-  "status": "READY",
-  "implementation": "IMPLEMENTED",
+  "title": "Major revision the profile: trait substitution at a common reporting ratio",
   "model": "model_mwspm_gen3_rhohat",
   "model_version": "gen3_rhohat",
-  "claims": [],
-  "decision": "protocols/decisions/2026-10-18_major_revision.md",
   "solver": {
     "solver": "rk4",
     "dt": 0.025,
@@ -34,7 +28,6 @@
     "aegypti_tableB_swap",
     "hybrid_LH2014_a_sigma_mu"
   ],
-  "trait_sets_note": "Coefficient triples and alternative functional forms are copied verbatim from exp_t14_trait_source_swap.json and exp_t14_trait_source_swap_c1.json; this config repeats them so the revised run is self-contained.",
   "trait_sets": {
     "albopictus_tableA_baseline": {
       "kind": "coef",
@@ -155,7 +148,6 @@
     "TolFun": 1e-09,
     "verbose": true
   },
-  "acceptance": "Conditional refits under one numerical and statistical specification. tau* shifts and Delta-BIC are descriptive; the fit is not claimed to discriminate trait sets and no rho estimate is reported.",
   "deterministic": true,
   "outputs": [
     "trait_refit_pure.csv",
@@ -164,6 +156,5 @@
   ],
   "solver_note": "fast=true selects the inlined RK4 stages; verified bitwise identical to the dailyRhs path at three parameter points (max|diff| = 0.0).",
   "warm_from_run": "20261018T174814_3ce1eacb",
-  "fixed_rho": 0.8,
-  "note": "Same three trait sets, refitted with rho FIXED at 0.8 so that the onset-week difference measures the trait curves rather than the drift along the nearly flat rho ridge."
+  "fixed_rho": 0.8
 }

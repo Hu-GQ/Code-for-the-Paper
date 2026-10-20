@@ -1,11 +1,11 @@
 function fig2_fit_main()
 %FIG2_FIT_MAIN  Fig 2 - fit vs observation, raw and log1p scales.
 %
-%   Figure-level claim: the calibrated M-WSPM reproduces the observed season
+%   Figure-level statement: the calibrated M-WSPM reproduces the observed season
 %   on both scales (R2_raw 0.950, R2_log 0.976); reported total 767.2 vs 767 observed.
 %
-%   Read-only data: T12.01  20261006T012933_c2b62344/data/weekly_fit.csv
-%   Claims: CL-10, CL-14.
+%   Read-only data: the analysis  20261006T012933_c2b62344/data/weekly_fit.csv
+%   Claims: the statement, the statement.
 
 pp_util('style');
 d = pp_util('dirs');

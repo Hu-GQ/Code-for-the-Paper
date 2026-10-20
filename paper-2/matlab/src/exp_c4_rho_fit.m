@@ -1,11 +1,11 @@
 function out = exp_c4_rho_fit(ctx)
-%EXP_C4_RHO_FIT  T12.01 -- free rho fit + profile likelihood (C4 main report point).
+%EXP_C4_RHO_FIT  the analysis -- free rho fit + profile likelihood (C4 main report point).
 %
 %   Experiment entry point for config/experiments/exp_c4_rho_fit.json.
 %
 %   This is the run that turns "rho is a fitted reporting ratio" into a number
 %   WITH an interval.  Unlocked by the G0 ruling S3b (decision
-%   protocols/decisions/2026-10-06_G0_novelty_preemption_ruling.md).
+%   the project record/2026-10-06_G0_novelty_preemption_ruling.md).
 %
 %   Honest constraints carried in from the T12 audit
 %   ------------------------------------------------
@@ -20,7 +20,7 @@ function out = exp_c4_rho_fit(ctx)
 %      hiding the other would be reporting only the flattering branch.
 %   3. rho touches the parametrisation bound rho <= 0.80.  That is recorded as
 %      `at_bound`, and it bounds the language that may be used later
-%      (obligation O1): nothing here may be called "the estimated reporting
+%      (obligation ): nothing here may be called "the estimated reporting
 %      rate", only "the highest reporting rate the data cannot exclude".
 %
 %   No synthetic data, no random replicate: this is frequentist profile
@@ -32,7 +32,7 @@ root      = ctx.root;
 modelCard = ctx.modelCard;
 cfg       = ctx.cfg;
 
-fprintf(logFid, '=== exp_c4_rho_fit (T12.01, C4 main report point) ===\n');
+fprintf(logFid, '=== exp_c4_rho_fit (the analysis, C4 main report point) ===\n');
 fprintf(logFid, 'claims: %s\n', strjoin(cellstr(string(getdef(cfg, 'claims', {}))), ', '));
 fprintf(logFid, 'G0 ruling S3b (2026-10-06) unlocked this experiment.\n');
 
@@ -201,7 +201,7 @@ fprintf(logFid, 'main: %s  rho=%.6f  BIC=%.4f  admissible under rho<=%.2f: %d\n'
 bestJson = struct();
 bestJson.provenance = struct('parent_run_id', ctx.runId, ...
     'experiment_id', ctx.expId, 'config_sha256', ctx.cfgHash, ...
-    'note', 'exp_c4_gate_g1 (T13.01) must consume THIS run; it exits with an explicit error otherwise.');
+    'note', 'exp_c4_gate_g1 (the analysis) must consume THIS run; it exits with an explicit error otherwise.');
 bestJson.selection_rule = 'minimum BIC over the integer-lag free fits; BIC computed from nll_full, not from J';
 bestJson.free_fits = fits;
 bestJson.main_report_point = struct('d_weeks', mainLag, 'theta', main.theta, 'nll', main.nll, ...
@@ -275,7 +275,7 @@ out.outputs = {'fit_best.json', 'rho_profile.csv', 'weekly_fit.csv', 'parameter_
 out.deterministic = true;
 out.parent_run_id = ctx.runId;
 out.rng = 'fixed optimiser seeds for reproducible starts; the spread of start values is NOT an interval';
-out.note = ['T12.01 main report point. rho touches the source bound, so per obligation O1 it may ' ...
+out.note = ['the analysis main report point. rho touches the source bound, so per obligation O1 it may ' ...
     'only be described as the highest reporting rate the data cannot exclude.'];
 end
 

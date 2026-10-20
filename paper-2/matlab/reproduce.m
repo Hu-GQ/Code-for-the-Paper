@@ -6,10 +6,10 @@ function out = reproduce(expId, varargin)
 %   reproduce(expId)                     run experiment <expId>
 %   reproduce(expId, 'dry_run', true)    validate config/inputs only, no numerics
 %   reproduce(expId, 'require_ready', false)
-%                                        allow a TODO/BLOCKED config to run
+%                                        allow a TODO/not enabled config to run
 %                                        (only for an explicitly authorised run)
 %
-%   Design constraints (protocols/PROJECT_RULES.md Sec.4):
+%   Design constraints (the project record Sec.4):
 %     * paths are resolved from the PROJECT LOCATION, never from pwd;
 %     * no dependence on the MATLAB base workspace or on any GUI action;
 %     * every run gets its own results/runs/<run_id>/ containing config.json,
@@ -143,7 +143,7 @@ fprintf('%-26s %-10s %-9s %-13s %-26s %s\n', 'experiment_id', 'task', 'status', 
 for k = 1:size(rows, 1)
     fprintf('%-26s %-10s %-9s %-13s %-26s %s\n', rows{k, :});
 end
-fprintf(['\nstatus         = authorisation/gate  (READY runs; TODO/BLOCKED need ''require_ready'',false)\n' ...
+fprintf(['\nstatus         = authorisation/gate  (READY runs; TODO/not enabled need ''require_ready'',false)\n' ...
          'implementation = is the entry function written yet\n' ...
          '=> READY + TODO means "cleared methodologically, code not written yet".\n']);
 fprintf('\nrun one with  reproduce(''<experiment_id>'')  or validate with  reproduce(''<experiment_id>'',''dry_run'',true)\n');

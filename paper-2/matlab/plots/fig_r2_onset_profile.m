@@ -8,7 +8,7 @@ function fig_r2_onset_profile()
 %   coefficients, unclamped RK4 at 0.025 d, pure Poisson likelihood and no
 %   peak-week penalty (run recorded in figs source_data/r2_profile_run.txt).
 %
-%   Claims: CL-01, CL-02, CL-03, CL-12.  All numbers are descriptive
+%   Claims: the statement, the statement, the statement, the statement.  All numbers are descriptive
 %   conditional candidates; no interval in these figures is a confidence set.
 %
 %   Read-only data:

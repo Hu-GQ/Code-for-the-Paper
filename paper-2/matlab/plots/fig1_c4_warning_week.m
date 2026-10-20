@@ -1,15 +1,15 @@
 function fig1_c4_warning_week()
 %FIG1_C4_WARNING_WEEK  Fig 1 - threshold-free warning week (C4 core figure).
 %
-%   Figure-level claim: the T0-crossing warning week tau*(rho) drifts by only
+%   Figure-level statement: the T0-crossing warning week tau*(rho) drifts by only
 %   1-2 weeks across the frozen gate grid rho in [0.30, 1.00] (both data lags),
 %   while the cumulative-case caliber drifts 16 weeks across thresholds 1/100/500.
 %   Honesty panel: cumulative detections at tau* are O(1-3) cases => no lead time.
 %
 %   Read-only data (saved runs only; no re-solve, no re-fit):
-%     T14.01  20261006T104119_0570febb/data/warning_week_vs_rho.csv
-%     T13.01  20261006T020359_3295cf28/data/threshold_drift.csv
-%   Claims: CL-01, CL-02, CL-03, CL-22.
+%     the analysis  20261006T104119_0570febb/data/warning_week_vs_rho.csv
+%     the analysis  20261006T020359_3295cf28/data/threshold_drift.csv
+%   Claims: the statement, the statement, the statement, the statement.
 
 pp_util('style');
 d = pp_util('dirs');

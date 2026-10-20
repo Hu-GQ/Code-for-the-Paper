@@ -36,7 +36,7 @@ function out = mwspm_branching_backward(R, opts)
 %     rho         vector of detection fractions (default: [])
 %     t_eval      times (days elapsed) at which to report (default: week starts)
 %     static      if true, freeze the rates at each t_eval (quasi-static
-%                 variant used to quantify obligation O8); default false
+%                 variant used to quantify obligation ); default false
 %     max_step    solver MaxStep in days (default 0.1 for the time-varying
 %                 case, 5 for the frozen case)
 %

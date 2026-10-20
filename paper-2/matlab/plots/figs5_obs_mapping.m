@@ -2,9 +2,9 @@ function figs5_obs_mapping()
 %FIGS5_OBS_MAPPING  Fig S5 - observation mapping (reported vs true split).
 %
 %   Read-only: data/processed/weekly_analysis_input.csv (frozen input layer,
-%   explicitly annotated historical save) + T12.01 20261006T012933_c2b62344/
+%   explicitly annotated historical save) + the analysis 20261006T012933_c2b62344/
 %   data/weekly_fit.csv.
-%   Claims: CL-12 / CL-14 (observation caliber; reported-vs-true separation).
+%   Claims: the statement / the statement (observation caliber; reported-vs-true separation).
 %
 %   Panel (a): weekly local / imported reported cases (stacked), week_index.
 %   Panel (b): observed vs model-reported vs model true incidence (log).

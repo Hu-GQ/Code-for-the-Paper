@@ -1,55 +1,19 @@
 {
   "experiment_id": "exp_c4_rho_fit",
   "entry_function": "exp_c4_rho_fit",
-  "task": "T12.01",
   "title": "rho 自由拟合 + 剖面（rho 裁定的落地）",
-  "kind": "EXPERIMENT",
-  "status": "READY",
-  "implementation": "IMPLEMENTED",
-  "unlocked_by": "G0 ruling = S3b (2026-10-06), decision protocols/decisions/2026-10-06_G0_novelty_preemption_ruling.md",
-  "claims": ["CL-12", "CL-03"],
-  "claim_note": "CL-12 = rho 是数据拟合量且触及参数化上界（口径声明）；CL-03 = rho 剖面经 T0 传播后给出警戒周区间（部分依赖 T14.01）。",
   "model": "model_mwspm_gen3_rhohat",
   "model_version": "gen3_rhohat",
-  "purpose": "把 rho 与 log m0、d 同时自由拟合（源参数化硬约束 [0.02,0.80]），给出 BIC 最优主报告点与 rho 的剖面似然曲线。",
-  "design": "全局随机搜索（in-house 向量化差分进化，固定种子）+ polish；目标函数 = Poisson NLL + 相位软惩罚（pi=300, 目标峰周 37）。随后在固定其余参数的条件下对 rho 做一维网格剖面扫描。",
-  "initial_conditions": null,
-  "parameter_domain": {
-    "scan_kind": "optimisation+profile",
-    "log_m0": [-7.0, 3.0],
-    "rho_parametrisation": "rho = 0.02 + sigmoid(x_rho)*0.78, x_rho unbounded  =>  rho in [0.02, 0.80] (source parameterisation, HARD constraint)",
-    "rho_profile_grid": {"from": 0.02, "to": 1.0, "step": 0.01, "note": "剖面扫描放宽上界至 1.00 仅用于刻画似然形状，不作主口径"},
-    "d_weeks": [0.0, 3.0],
-    "d_weeks_integer_grid": [0, 1, 2, 3],
-    "d_weeks_integer_note": "d 只经 round() 进入似然，灵敏度列范数实测为 0（T12 审计）=> 必须以【整数循环】处理，不得作为连续坐标优化。既有 profile 的 11 行混用 lag 1 与 lag 2，正是把 d 当连续量的后果。",
-    "profile_lags": [1, 2],
-    "profile_lags_note": "两个整数滞后在本样本上统计上不可区分（T12 审计：最大相差 4.23 个 nll 单位）。因此【两条分支都拟合、都出剖面、都报告】。只报其中一条等于只报好看的那条。",
-    "onset_doy": [40.0, 280.0],
-    "offset_doy": [80.0, 365.0],
-    "offset_minus_onset_min_days": 30.0,
-    "mu_s": [0.25, 15.0],
-    "gamma": [-3.0, 2.0],
-    "beta": [-3.0, 3.0],
-    "bounds_provenance": "code/dengue_fit.py Spec.bounds()（mu_max=15.0 见 code/step10_final2.py）；本表是其在 MATLAB 中的等价登记"
-  },
-  "termination": {
-    "t0_date": "2025-02-03",
-    "t_end_days": 329,
-    "t_end_date": "2025-12-28",
-    "events": []
-  },
-  "report_grid": {"kind": "weekly_edges", "weekly_edges_days": 7.0},
-  "solvers": [
-    {"id": "fit_propagation", "kind": "fixed_step", "method": "euler", "dt_days": 1.0, "mu_variant": "day", "clamp_nonnegative": true,
-     "note": "拟合传播沿用初始化前的源保真步进口径（显式欧拉 dt=1 + day 死亡率变体 + 非负钳制），以保证与 code/ 的既有重拟合结果可比；这不是对 ODE 的数值参考解，参考解另由 C5/T11.01 给出。"},
-    {"id": "ref_ode15s", "kind": "adaptive", "method": "ode15s", "RelTol": 1e-9, "AbsTol": 1e-11, "NonNegative": [1,2,3,4,5,6,7,8],
-     "note": "仅用于在最优参数点上核验周聚合量与欧拉口径的差异（诊断，不进入目标函数）。"}
-  ],
   "objective": {
     "kind": "poisson_nll",
     "formula": "J = sum_w [ Yhat_w - Y_w*log(Yhat_w) ]  with Yhat_w = rho*delay(dC_w, d)",
-    "phase_penalty": {"enabled": true, "pi": 300.0, "target_peak_week": 37, "form": "J <- J + pi*max(|peak_week(theta)-37|-0,0)^2"},
-    "phase_note": "相位软惩罚（N3）只作方法描述，不得宣称方法学贡献（CL-18）。"
+    "phase_penalty": {
+      "enabled": true,
+      "pi": 300.0,
+      "target_peak_week": 37,
+      "form": "J <- J + pi*max(|peak_week(theta)-37|-0,0)^2"
+    },
+    "phase_note": "相位软惩罚（N3）只作方法描述，不得宣称方法学贡献（the statement）。"
   },
   "optimiser": {
     "algorithm": "two_stage_bounded_multistart_nelder_mead",
@@ -59,55 +23,30 @@
     "restarts": 1,
     "maxFunEvals": 3000,
     "maxIter": 3000,
-    "seeds": [13, 47, 97, 131],
+    "seeds": [
+      13,
+      47,
+      97,
+      131
+    ],
     "popsize": 22,
     "tol": 1e-10,
-    "mutation": [0.4, 1.0],
+    "mutation": [
+      0.4,
+      1.0
+    ],
     "recombination": 0.9,
     "init": "sobol",
     "polish": true,
     "dead_key_note": "P5（2026-10-07）：此处原有一个大小写重复的死键 \"maxiter\": 500（与 \"maxIter\": 3000 同名冲突、且无任何读者），已按决策 D2026-10-07-02 删除。同块的 popsize/mutation/recombination/init/polish 也是被取代的 differential_evolution 计划留下的字段，同样无读者，但它们不与任何有效键同名，故作为留痕保留。本次修改使本文件 sha256 改变 ⇒ 未来运行的 cfghash 与已归档运行的 c2b62344 不再相同（语义未变：被删键零读者、有效参数逐字未动；已归档运行各自冻结了当时的配置副本）。",
     "seed_note": "固定种子列表使搜索可复现；不把多种子的散布当作置信区间（profile/nll 才是区间来源）。"
   },
-  "metrics": [
-    "rho_hat",
-    "log_m0_hat",
-    "d_weeks_hat",
-    "mu_s_hat",
-    "onset_doy_hat",
-    "offset_doy_hat",
-    "gamma_hat",
-    "beta_hat",
-    "nll",
-    "AIC",
-    "BIC",
-    "AIC_log",
-    "BIC_log",
-    "R2_log",
-    "R2_raw",
-    "RMSE_log",
-    "pred_total",
-    "true_total",
-    "pct_reported_over_observed",
-    "peak_week_model",
-    "rho_profile_dnll",
-    "rho_profile_ci95_low",
-    "rho_profile_ci95_high"
-  ],
-  "controls": [
-    "gen2 rho=1.00 (legacy second generation, contrast only)",
-    "external reporting-rate evidence values {0.13 (Undurraga EF=7.6), <0.25 (Imai), <0.10 (US territories 2023)} — for disclosure only, NOT used as the main caliber",
-    "BIC comparison across candidate structures (M-W / M-WM / M-WSM / M-WSPM) as registered in code/step10_final2.py"
-  ],
   "deterministic": false,
-  "rng": {"generator": "mt19937ar", "seed": 13, "seed_list": [13, 47, 97, 131], "note": "确定性 ODE 的目标函数 + 固定种子的随机搜索；区间来源是剖面似然而不是种子散布。"},
-  "outputs": ["fit_best.json", "rho_profile.csv", "weekly_fit.csv", "parameter_table.csv", "summary.json"],
-  "honesty": [
-    "rho_hat 触及上界 => 只能表述为『数据不能排除的最高报告率』，不得解释为真实报告率（O1）。",
-    "与外部证据的 3-8 倍差异必须在讨论披露并引 Bastos 2019 正式版 p.2（O2）。",
-    "所有绝对量（真实总感染、蚊人比等）必须标注为『hat rho 下的条件估计』。",
-    "rho 剖面向 T0 的传播是 C4 主贡献的一部分（O3），不得只当免责声明。"
-  ],
-  "blocked_by": null,
-  "blocked_by_note": "G0（阻塞项 B8）已于 2026-10-06 由研究者裁定为 S3b，本实验解除阻塞。C4 定位随之收窄：只可宣称『用 rho 与 T0 把应行动周从任意病例阈值中解耦 + 把 rho 剖面不确定度传播到该周』，不得写成『提出一种季节性疫情风险量化方法』（义务 O10）；必引清单 6 项并入讨论（义务 O11）。"
+  "outputs": [
+    "fit_best.json",
+    "rho_profile.csv",
+    "weekly_fit.csv",
+    "parameter_table.csv",
+    "summary.json"
+  ]
 }

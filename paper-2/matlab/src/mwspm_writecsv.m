@@ -10,7 +10,7 @@ function mwspm_writecsv(path, header, data)
 %
 %   PRECISION (P2, fixed 2026-10-07)
 %   -------------------------------
-%   Values used to be written with '%.10g'.  Measured consequence: the T12.01
+%   Values used to be written with '%.10g'.  Measured consequence: the the analysis
 %   weekly_fit.csv printed weeks 36 and 37 as BITWISE EQUAL counts, which reads
 %   like a real plateau but was a rounding pseudo-tie.  Values are now written
 %   with '%.17g', which round-trips any IEEE double exactly, so a printed tie is

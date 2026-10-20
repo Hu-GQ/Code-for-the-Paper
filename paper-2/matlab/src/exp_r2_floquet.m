@@ -8,7 +8,7 @@ function payload = exp_r2_floquet(ctx)
 %   same 329-day zero-order-held artificial periodic repetition that the theory
 %   source now declares.
 %
-%   A regression block first re-derives the archived T12.01 numbers from
+%   A regression block first re-derives the archived the analysis numbers from
 %   theory/derivations/gzhou_t1201_daily_series.csv and asserts that
 %   mwspm_floquet_metrics reproduces them; if the shared implementation ever
 %   drifts, this run fails instead of publishing new numbers.

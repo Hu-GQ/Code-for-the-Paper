@@ -43,7 +43,7 @@ assert(any(strcmp(muVariant, {'raw', 'day'})), 'mwspm:calib', ...
 p0 = mwspm_params(modelCard);
 trOpts = struct('mu_cap', p0.mu_v_cap);
 if isfield(opts, 'coef') && ~isempty(opts.coef)
-    trOpts.coef = opts.coef;   % T14.02 trait-parameterisation sensitivity (opt-in)
+    trOpts.coef = opts.coef;   % the analysis trait-parameterisation sensitivity (opt-in)
 end
 if isfield(opts, 'alt') && ~isempty(opts.alt)
     trOpts.alt = opts.alt;     % C1: alternative functional forms (hybrid source)

@@ -68,7 +68,7 @@ else
     % line cannot change any previously recorded result.  It became necessary
     % because the temperature / importation forcing is piecewise constant on a
     % DAILY grid: without a cap the adaptive solver steps straight over the
-    % jumps.  Measured failure (T11.01, baseline model): ode15s at
+    % jumps.  Measured failure (the analysis, baseline model): ode15s at
     % RelTol 1e-10 / AbsTol 1e-12 returned only 18 internal steps with steps up
     % to 32.9 days and a cumulative incidence of exactly zero, while the same
     % model integrated with dt = 0.01 gave ~380 infections.  A reference that

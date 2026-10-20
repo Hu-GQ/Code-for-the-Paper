@@ -5,7 +5,7 @@ function h = mwspm_sha256(x)
 %   h = mwspm_sha256(path)    existing file -> raw bytes of the file
 %   h = mwspm_sha256('text')  string that is not a file path -> UTF-8 bytes
 %
-%   Used for the provenance hashes required by protocols/PROJECT_RULES.md
+%   Used for the provenance hashes required by the project record
 %   Sec.4.4 (input hashes, code hashes, run config hash).
 %
 %   Implementation note: the digest is computed with the JVM

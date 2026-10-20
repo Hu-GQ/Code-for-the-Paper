@@ -1,8 +1,8 @@
 function out = exp_c4_branching(ctx)
-%EXP_C4_BRANCHING  T13.02 -- stochastic two-type branching process + rho.
+%EXP_C4_BRANCHING  the analysis -- stochastic two-type branching process + rho.
 %
 %   Experiment entry point for config/experiments/exp_c4_branching.json.
-%   Unlocked by gate G1 (T13.01) = GO, 2026-10-06.
+%   Unlocked by gate G1 (the analysis) = GO, 2026-10-06.
 %
 %   WHAT IS COMPUTED
 %   ----------------
@@ -30,7 +30,7 @@ function out = exp_c4_branching(ctx)
 %     deterministic point       : (a)-(d) evaluated once, no interval;
 %     parameter uncertainty     : NOT produced here - rho is a GRID, not an
 %                                 estimated interval (the Wilks band from
-%                                 T12.01 covers the whole [0.02, 1.00]);
+%                                 the analysis covers the whole [0.02, 1.00]);
 %     replicate distribution    : the empirical distribution of the first
 %                                 detection week over N_sim replicates, with
 %                                 the Monte-Carlo standard error reported.
@@ -41,9 +41,9 @@ root   = ctx.root;
 cfg    = ctx.cfg;
 modelCard = ctx.modelCard;
 
-fprintf(logFid, '=== exp_c4_branching (T13.02, C4 stochastic control) ===\n');
+fprintf(logFid, '=== exp_c4_branching (the analysis, C4 stochastic control) ===\n');
 fprintf(logFid, 'claims: %s\n', strjoin(cellstr(string(getdef(cfg, 'claims', {}))), ', '));
-fprintf(logFid, 'unlocked by gate G1 (T13.01) = GO, 2026-10-06.\n');
+fprintf(logFid, 'unlocked by gate G1 (the analysis) = GO, 2026-10-06.\n');
 
 D = mwspm_load_data(root, modelCard);
 pBase = mwspm_params(modelCard);
@@ -161,7 +161,7 @@ for vi = 1:numel(variants)
     Rsim = A.(vv).R;
     bwy = A.(vv).bw;
     vDiag = struct('n_points', 0, 'max_abs_diff_in_mc_se', 0, 'sum_overshoot', 0, 'sum_cap', 0);
-    fprintf(logFid, '  variant %s:\n', vv);
+    fprintf(logFid, '  variant %<local path>, vv);
     for ti = 1:numel(tauSub)
         tw = tauSub(ti);
         for ri = 1:numel(rhoGrid)
@@ -224,7 +224,7 @@ for vi = 1:numel(variants)
 end
 
 % ===================================================== 3. profile shape =====
-fprintf(logFid, '\n--- 3. establishment profile shape (CL-09 test) ---\n');
+fprintf(logFid, '\n--- 3. establishment profile shape (the statement test) ---\n');
 profRows = {};
 for vi = 1:numel(variants)
     vv = lower(char(variants{vi}));
@@ -303,7 +303,7 @@ ch = {'seed_type', 'I_h (one imported infectious human); the seed itself is not 
     'poisson_sampler', 'mwspm_poissrnd: Knuth product-of-uniforms for lambda <= 25, normal approximation above (declared, counted)';
     'clamp_policy', 'the tau-leap draws competing exits independently, so their sum can exceed the compartment; clamps are COUNTED (n_overshoot)';
     'cap_policy', sprintf('live population > %d or cumulative human infections > %d stops the replicate and declares it established; (1-rho)^cap is < 1e-24 on this rho grid', 400, 5000);
-    'what_is_not_here', 'no parameter-uncertainty interval is produced: rho is a grid, and the T12.01 Wilks band for rho already covers the whole [0.02, 1.00]';
+    'what_is_not_here', 'no parameter-uncertainty interval is produced: rho is a grid, and the the analysis Wilks band for rho already covers the whole [0.02, 1.00]';
     'variants_both_reported', 'the tau-leap subset and the dt refinement run on BOTH mu variants (day and raw), because the config variants_note forbids reporting only one; the exact backward solve covers both as well'};
 fid = fopen(fullfile(ctx.dataDir, 'raw_choices.csv'), 'w', 'n', 'UTF-8');
 fprintf(fid, 'choice,value\n');
@@ -325,7 +325,7 @@ summary.rng = struct('generator', 'mt19937ar', 'base_seed', baseSeed, ...
 summary.n_sim = nSim;
 summary.p_target = pTarget;
 summary.estimands = {'p_surv (exact, rho-free)', 'p_est (exact + simulated)', ...
-    'p_carmona (cited control)', 'p_*_static (quasi-static, obligation O8)'};
+    'p_carmona (cited control)', 'p_*_static (quasi-static, obligation )'};
 summary.sim_diagnostics = simDiag;
 summary.max_violation_of_unit_interval = max(cellfun(@(v) A.(lower(char(v))).bw.max_violation_of_unit_interval, variants));
 summary.profile_shape_note = 'see p_establishment_by_week.csv (peak week, number of interior local maxima, single-peaked flag)';
@@ -345,7 +345,7 @@ summary.comparison = struct('tau_star_deterministic', tauStar, 'observation_star
 summary.honesty = ['p_est peaks are MEASURED, not asserted; the profile is reported as ' ...
     'single-peaked only if the measured number of interior local maxima is <= 1. ' ...
     'Carmona & Gandon 2020 Eq.(2) is a cited control and is never presented as a ' ...
-    'contribution of this paper (CL-09 prohibition).'];
+    'contribution of this paper (the statement prohibition).'];
 mwspm_writejson(fullfile(ctx.dataDir, 'summary.json'), summary);
 
 out = struct();
@@ -357,7 +357,7 @@ out.deterministic = false;
 out.rng = sprintf('mt19937ar, base_seed %d, one stream per (tau,rho)', baseSeed);
 out.outputs = {'branching_analytic_grid.csv', 'branching_sim_subset.csv', ...
     'branching_dt_refinement.csv', 'p_establishment_by_week.csv', 'raw_choices.csv', 'summary.json'};
-out.note = ['T13.02. The deterministic profile, the exact branching probabilities and the ' ...
+out.note = ['the analysis. The deterministic profile, the exact branching probabilities and the ' ...
     'replicate distribution are three different objects and are reported as such; ' ...
     'the 47 weekly samples of one trajectory are never used as replicates.'];
 end

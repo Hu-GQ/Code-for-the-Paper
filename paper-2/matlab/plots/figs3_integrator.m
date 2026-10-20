@@ -2,12 +2,12 @@ function figs3_integrator()
 %FIGS3_INTEGRATOR  Fig S3 - integrator diagnostics (C5, case-study caliber).
 %
 %   Read-only:
-%     - T11.01 20261006T011600_2a8ab00f/data/reference_weekly.csv
-%     - T11.01 20261006T011600_2a8ab00f/data/grid_results_long.csv
+%     - the analysis 20261006T011600_2a8ab00f/data/reference_weekly.csv
+%     - the analysis 20261006T011600_2a8ab00f/data/grid_results_long.csv
 %       (authoritative spelled-out file; grid_results.csv is the numeric-code
 %        twin produced by mwspm_writecsv - noted in the run summary.json)
-%     - T11.02 20261006T012855_1c1e8c7b/data/dt_sweep_results.csv
-%   Claims: CL-06 (refuted boolean criterion; case study after S2/S4).
+%     - the analysis 20261006T012855_1c1e8c7b/data/dt_sweep_results.csv
+%   Claims: the statement (refuted boolean criterion; case study after S2/S4).
 %
 %   Panel (a): 4 ode15s reference weekly true-incidence curves.
 %   Panel (b): Euler total-error vs max|1-mu_eff*dt| (Euler stability metric), 2 models x 2 variants,
@@ -94,7 +94,7 @@ xlim(ax3, [0.008 6]); ylim(ax3, [1e-7 1e2]);
 xlabel(ax3, 'dt (days)'); ylabel(ax3, '|peak I_h rel. error|');
 text(ax3, 0.0105, 0.45, 'Euler', 'FontSize', 6.6, 'Color', pal.blue);
 text(ax3, 0.055, 2.2e-6, 'RK4', 'FontSize', 6.6, 'Color', pal.orange);
-text(ax3, 0.013, 28, 'orders ~1 / ~4 (T11.02)', 'FontSize', 6.4, 'Color', [0.35 0.35 0.35]);
+text(ax3, 0.013, 28, 'orders ~1 / ~4 (the analysis)', 'FontSize', 6.4, 'Color', [0.35 0.35 0.35]);
 title(ax3, '(c) dt-sweep peak error', 'FontSize', 8, 'FontWeight', 'bold');
 
 sd = fullfile(d.src, 'figs3_integrator');

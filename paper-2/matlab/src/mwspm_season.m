@@ -12,7 +12,7 @@ function [s, info] = mwspm_season(doy, sp)
 %   s        = max(s_hat/mean(s_hat), s_floor) with the mean taken over the
 %              analysis window (the caller passes the full daily grid once).
 %
-%   IMPORTANT (theory/model_spec.md Sec.7.3, CL-16): s(t) is the EXTERNALLY
+%   IMPORTANT (theory/model_spec.md Sec.7.3, the statement): s(t) is the EXTERNALLY
 %   SET vector supply/driver.  The in-model abundance V(t) is a first-order
 %   lag filter of N_v(t)=m0*N_h*s(t) and is NOT equal to it.  Never describe
 %   s(t) as "the number of mosquitoes in the model".

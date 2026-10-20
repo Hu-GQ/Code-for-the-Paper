@@ -15,7 +15,7 @@ function O = mwspm_observe(tDaily, CumVec, p, D)
 %       Y_w | dC_{w-d} ~ Binomial(dC_{w-d}, rho),  E[Y_w | .] = rho*dC_{w-d}
 %   The scalar d-week lag is applied by shifting the weekly true-incidence
 %   series; it is an OBSERVATION-layer lag and is NOT a delay inside the ODE
-%   (obligation O9).
+%   (obligation ).
 %
 %   Output O fields: dC, dC_delayed, Yhat, Y, residuals, and the metrics
 %   R2_log, R2_raw, RMSE_log, poisson_nll, totals, peak weeks.

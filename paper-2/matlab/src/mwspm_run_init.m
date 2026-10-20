@@ -7,12 +7,12 @@ function ctx = mwspm_run_init(root, expId, varargin)
 %   run_id = <YYYYmmddTHHMMSS local, UTC+8>_<sha256(config file) first 8 chars>
 %   results/runs/<run_id>/{config.json, logs/, data/}
 %
-%   Guarantees required by protocols/PROJECT_RULES.md Sec.4:
+%   Guarantees required by the project record Sec.4:
 %     * the directory is unique and never overwritten (a counter suffix is
 %       added if a collision occurs within the same second);
 %     * the config actually used is copied into the run directory;
 %     * the experiment config file itself is NEVER modified (read-only input);
-%     * a run whose config has status TODO/BLOCKED is refused unless the
+%     * a run whose config has status TODO/not enabled is refused unless the
 %       caller explicitly opts in with 'require_ready',false.
 
 p = inputParser;

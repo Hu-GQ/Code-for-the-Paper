@@ -2,19 +2,19 @@ function fig5_risk_window()
 %FIG5_RISK_WINDOW  Fig 5 - the seasonal R0(t) window against the 2025 outbreak.
 %
 %   Deterministic export (explicitly allowed by the workflow, step 17):
-%   R0(t) is computed from the SAVED main-report-point theta (T12.01
+%   R0(t) is computed from the SAVED main-report-point theta (the analysis
 %   fit_best.json) and the SAVED temperature input via the project's
 %   validated mwspm chain (mwspm_season / mwspm_thermal_traits / mwspm_r0,
 %   N_v supply caliber, continuous-mortality 'raw' variant).  No ODE solve,
 %   no re-fit, no parameter change.
 %
-%   Figure-level claim: the R0(t)>1 window (first week 15-17) contains the
+%   Figure-level statement: the R0(t)>1 window (first week 15-17) contains the
 %   outbreak take-off; the warning week (18-20) falls inside it, coinciding
 %   with the first detected week - no lead time.
 %
-%   Read-only inputs: T12.01 fit_best.json; T13.01 gate_g1_weeks.csv;
+%   Read-only inputs: the analysis fit_best.json; the analysis gate_g1_weeks.csv;
 %   model card config/experiments/model_mwspm_gen3_rhohat.json.
-%   Claims: CL-01, CL-14, CL-03.
+%   Claims: the statement, the statement, the statement.
 
 pp_util('style');
 d = pp_util('dirs');
@@ -36,7 +36,7 @@ D    = mwspm_load_data(root, mc);
 pre  = mwspm_calib_prepare(D, mc, struct('mu_variant', 'day'));
 pRef = mwspm_params(mc);
 
-% ---- deterministic export of R0(t) (same chain as T14.01's unc_tau_star) --
+% ---- deterministic export of R0(t) (same chain as the analysis's unc_tau_star) --
 sp = struct('onset_doy', th.onset_doy, 'offset_doy', th.offset_doy, ...
     'kappa_days', pre.kappa_days, 'gamma', th.gamma, 'beta', th.beta, ...
     's_floor', pre.s_floor, 'min_window_days', pre.min_window_days, ...

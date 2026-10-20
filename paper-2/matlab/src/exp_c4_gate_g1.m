@@ -1,5 +1,5 @@
 function out = exp_c4_gate_g1(ctx)
-%EXP_C4_GATE_G1  T13.01 -- gate G1: is the C4 "alarm week" stable in rho?
+%EXP_C4_GATE_G1  the analysis -- gate G1: is the C4 "alarm week" stable in rho?
 %
 %   Experiment entry point for config/experiments/exp_c4_gate_g1.json.
 %
@@ -28,7 +28,7 @@ function out = exp_c4_gate_g1(ctx)
 %   So any spread of tau* over the rho grid does NOT come from rho directly; it
 %   comes entirely from the fact that, at each rho, the other parameters are
 %   RE-OPTIMISED, which changes the trajectory and hence R0(w).  That is what
-%   the gate measures, and the report must say so (CL-22).
+%   the gate measures, and the report must say so (the statement).
 %
 %   This experiment is POST-PROCESSING of a parent run: it does not fit
 %   anything and does not re-integrate the ODE.
@@ -38,7 +38,7 @@ root   = ctx.root;
 cfg    = ctx.cfg;
 modelCard = ctx.modelCard;
 
-fprintf(logFid, '=== exp_c4_gate_g1 (T13.01, gate G1) ===\n');
+fprintf(logFid, '=== exp_c4_gate_g1 (the analysis, gate G1) ===\n');
 fprintf(logFid, 'claims: %s\n', strjoin(cellstr(string(getdef(cfg, 'claims', {}))), ', '));
 
 D   = mwspm_load_data(root, modelCard);
@@ -249,7 +249,7 @@ out.outputs = {'gate_g1_weeks.csv', 'gate_g1_verdict.json', 'threshold_drift.csv
 out.deterministic = true;
 out.rng = 'none (post-processing of a deterministic parent run)';
 out.note = ['Gate G1. A NO_GO triggers S1: C4 becomes a threshold-sensitivity section and ' ...
-    'T04 is reopened; this run does not attempt to rescue the claim by rewording.'];
+    'T04 is reopened; this run does not attempt to rescue the statement by rewording.'];
 end
 
 % ---------------------------------------------------------------------------

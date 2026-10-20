@@ -1,12 +1,12 @@
 function fig4_rho_profile()
 %FIG4_RHO_PROFILE  Fig 4 - rho profile likelihood: boundary and (un)identifiability.
 %
-%   Figure-level claim: the Wilks 95% band for rho covers the WHOLE grid
+%   Figure-level statement: the Wilks 95% band for rho covers the WHOLE grid
 %   ([0.02, 1.00] at lag 1) - rho is completely unidentifiable; the reported
 %   total is pinned (766.6-767.5) while the true burden spreads (767 -> 38373).
 %
-%   Read-only data: T12.01  20261006T012933_c2b62344/data/rho_profile.csv
-%   Claims: CL-12, CL-03.
+%   Read-only data: the analysis  20261006T012933_c2b62344/data/rho_profile.csv
+%   Claims: the statement, the statement.
 
 pp_util('style');
 d = pp_util('dirs');

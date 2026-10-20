@@ -48,7 +48,7 @@
 | `relative_humidity_mean_pct` | float | **百分比 %** | 该周平均相对湿度（逐小时→日均→周均） | 无缺失 |
 | `source_url` | str | — | 该周广东 CDC 周报原文 URL | 无 |
 
-**内部一致性（由构建脚本校验，见 `data/metadata/processed_checks.json`）**：
+**internal一致性（由构建脚本校验，见 `data/metadata/processed_checks.json`）**：
 
 - 行数 47 = `official_weekly_case_rows` ✅
 - `week_index` 连续 1–47 ✅；`iso_week − week_index ≡ 5` ✅

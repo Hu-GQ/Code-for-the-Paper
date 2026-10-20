@@ -1,16 +1,16 @@
 function fig6_traits_robustness()
 %FIG6_TRAITS_ROBUSTNESS  Fig 6 - trait-source robustness of the warning week.
 %
-%   Figure-level claim: tau* shifts by 2 weeks under trait-set replacement
+%   Figure-level statement: tau* shifts by 2 weeks under trait-set replacement
 %   (20 -> 18), reproduced INDEPENDENTLY by two swaps (same-source species
-%   swap T14.04; cross-source hybrid T14.05); the fit cannot discriminate
+%   swap the analysis; cross-source hybrid the analysis); the fit cannot discriminate
 %   between trait sets (dBIC 0.82 / 4.26).
 %
 %   Read-only data:
-%     T14.02  20261007T155558_86f11a38/data/r0T_curves.csv
-%     T14.04  20261007T205217_442e99f5/data/trait_set_refits.csv
-%     T14.05  20261007T210949_913918bd/data/trait_set_refits.csv
-%   Claims: CL-01 (limits 3/4), CL-10 (limit).
+%     the analysis  20261007T155558_86f11a38/data/r0T_curves.csv
+%     the analysis  20261007T205217_442e99f5/data/trait_set_refits.csv
+%     the analysis  20261007T210949_913918bd/data/trait_set_refits.csv
+%   Claims: the statement (limits 3/4), the statement (limit).
 
 pp_util('style');
 d = pp_util('dirs');
@@ -22,7 +22,7 @@ runD = pp_util('runDir', '20261007T210949_913918bd');
 fB = fullfile(runB, 'data', 'r0T_curves.csv');
 snap = pp_util('snap', {fB});
 
-% ===== panel a: R0(T) family under coefficient perturbation (T14.02) =====
+% ===== panel a: R0(T) family under coefficient perturbation (the analysis) =====
 C = mwspm_readcsv(fB);
 TC = pp_util('col', C, 'T_C');
 ncol = numel(C.names) - 1;

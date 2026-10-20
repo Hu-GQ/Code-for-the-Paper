@@ -1,9 +1,9 @@
 function figs1_tauleap_check()
-%FIGS1_TAULEAP_CHECK  Fig S1 - tau-leap simulation vs analytic p_est (T13.02).
+%FIGS1_TAULEAP_CHECK  Fig S1 - tau-leap simulation vs analytic p_est (the analysis).
 %
-%   Read-only: T13.02 20261006T105433_a29b2ba7/data/{branching_sim_subset.csv,
+%   Read-only: the analysis 20261006T105433_a29b2ba7/data/{branching_sim_subset.csv,
 %   branching_dt_refinement.csv}
-%   Claims: CL-09 (simulation consistency of the frozen detection-probability curve).
+%   Claims: the statement (simulation consistency of the frozen detection-probability curve).
 %
 %   Panel (a): p_est simulation vs exact (log-log, 1:1 line).
 %   Panel (b): dt-refinement change |fine - coarse| in units of the coarse-run

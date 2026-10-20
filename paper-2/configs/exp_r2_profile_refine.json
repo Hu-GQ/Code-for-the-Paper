@@ -1,15 +1,9 @@
 {
   "experiment_id": "exp_r2_profile_refine",
   "entry_function": "exp_r2_profile_refine",
-  "task": "T12.R2c",
   "title": "Major revision R2c: multi-start refinement at profile anchors",
-  "kind": "EXPERIMENT",
-  "status": "READY",
-  "implementation": "IMPLEMENTED",
   "model": "model_mwspm_gen3_rhohat",
   "model_version": "gen3_rhohat",
-  "claims": [],
-  "decision": "protocols/decisions/2026-10-18_major_revision.md",
   "solver": {
     "solver": "rk4",
     "dt": 0.025,
@@ -44,7 +38,6 @@
     "TolFun": 1e-08,
     "verbose": true
   },
-  "acceptance": "Refinement of named anchors only. Convergence from three independent starts supports local, not global, reproducibility; no confidence set is derived.",
   "deterministic": true,
   "outputs": [
     "refine_anchors.csv",

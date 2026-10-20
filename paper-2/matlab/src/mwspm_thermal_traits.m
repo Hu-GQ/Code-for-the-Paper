@@ -4,7 +4,7 @@ function tr = mwspm_thermal_traits(T, variant, opts)
 %   tr = mwspm_thermal_traits(T)              continuous-rate variant ('raw')
 %   tr = mwspm_thermal_traits(T, 'day')       source-faithful daily variant
 %   tr = mwspm_thermal_traits(T, 'raw', opts) with opts.mu_cap override
-%   tr = mwspm_thermal_traits(T, 'raw', opts) with opts.coef override (T14.02)
+%   tr = mwspm_thermal_traits(T, 'raw', opts) with opts.coef override (the analysis)
 %
 %   Source of the curves: Mordecai et al. 2017, PLoS NTD 11(4):e0005568,
 %   Table A, Ae. albopictus (registered in data/metadata/parameters.csv).
@@ -19,9 +19,9 @@ function tr = mwspm_thermal_traits(T, variant, opts)
 %            mu_s AFTERWARDS, which destroys the |1-mu*dt|<=1 safety; the two
 %            variants must therefore always be simulated and reported
 %            separately (see config/experiments/model_mwspm_gen3_rhohat.json,
-%            field mu_variant_note, and task T11.01).
+%            field mu_variant_note, and task the analysis).
 %
-%   COEFFICIENT OVERRIDE (T14.02, opt-in, default OFF)
+%   COEFFICIENT OVERRIDE (the analysis, opt-in, default OFF)
 %   --------------------------------------------------
 %   opts.coef.<trait> = [c, T0, Tm] replaces the fitted coefficient triple of
 %   that trait ONLY; every other trait keeps its published value.  This exists

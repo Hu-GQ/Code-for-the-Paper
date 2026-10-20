@@ -1,10 +1,10 @@
 function figs4_identifiability()
-%FIGS4_IDENTIFIABILITY  Fig S4 - onset-gamma identifiability (T14.03 + P4).
+%FIGS4_IDENTIFIABILITY  Fig S4 - onset-gamma identifiability (the analysis + P4).
 %
 %   Read-only: fine run 20261007T195150_93456b81/data/{joint_profile_2d.csv,
 %   profile_1d_onset.csv, profile_1d_gamma.csv}; coarse run
 %   20261007T162039_d1f013a8/data/profile_1d_onset.csv.
-%   Claims: T14.03 (verdict IDENTIFIABLE; projection control still VIOLATED
+%   Claims: the analysis (verdict IDENTIFIABLE; projection control still VIOLATED
 %   after P4, now as a node-phase effect).
 %
 %   Panel (a): joint (onset, gamma) profile, log10 dJ, fine grid.

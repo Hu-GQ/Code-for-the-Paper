@@ -18,7 +18,7 @@ function s = mwspm_stiffness(F, p, dtProbe)
 %
 %   2) explicit-Euler stability metric for the mosquito mortality channel,
 %          m_dt = max_t |1 - mu_eff(t)*dtProbe|
-%      which is the quantity that the C5 sub-claim is about (CL-06).  It is
+%      which is the quantity that the C5 sub-statement is about (the statement).  It is
 %      reported for BOTH mortality variants because the source project's daily
 %      map uses the 1-exp corrected variant and then multiplies by mu_s, so
 %      the two variants have different stability behaviour (see the model
@@ -41,13 +41,13 @@ function s = mwspm_stiffness(F, p, dtProbe)
 %         dependent for the same reason, so the spread persisted (11.2215 vs
 %         60.522) - which is why mwspm_make_forcing now carries
 %         mu_raw_daily / mu_eff_raw_daily.
-%   T11.01 and T07.02 quote these numbers, so a construction-dependent value
+%   the analysis and the analysis quote these numbers, so a construction-dependent value
 %   was not admissible.  The raw-variant numbers are unchanged by the fix (they
 %   are what T10's E0 run recorded: ratio 587.984, dt_euler_stable_max
 %   0.032376 d, max|1-mu_eff*dt| 60.522, 17/329 days outside the domain).
 %
 %   This function draws NO conclusion: it only measures.  The C5 verdict
-%   belongs to T11.01.
+%   belongs to the analysis.
 
 assert(nargin >= 3 && ~isempty(dtProbe), 'mwspm:stiffness', 'dtProbe is required');
 assert(isfield(F, 'mu_s'), 'mwspm:stiffness', ...

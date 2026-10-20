@@ -1,15 +1,15 @@
 function fig3_est_prob()
 %FIG3_EST_PROB  Fig 3 - probability of at least one local detection before window end.
 %
-%   Figure-level claim (frozen): the p_est profile is NOT single-peaked
+%   Figure-level statement (frozen): the p_est profile is NOT single-peaked
 %   (4 interior local maxima) with peak weeks 20/21 - the earlier single-peak
-%   claim (CL-09) was refuted by the higher-intensity stochastic control.
+%   statement (the statement) was refuted by the higher-intensity stochastic control.
 %   Estimator comparison: p_carmona / p_surv are of the same order as each
 %   other but a different order than p_est.
 %
-%   Read-only data: T13.02  20261006T105433_a29b2ba7/data/
+%   Read-only data: the analysis  20261006T105433_a29b2ba7/data/
 %       branching_analytic_grid.csv, p_establishment_by_week.csv
-%   Claims: CL-09 (updated caliber), CL-01 (mechanism context).
+%   Claims: the statement (updated caliber), the statement (mechanism context).
 
 pp_util('style');
 d = pp_util('dirs');

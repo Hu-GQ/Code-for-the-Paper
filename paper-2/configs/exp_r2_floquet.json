@@ -1,32 +1,27 @@
 {
   "experiment_id": "exp_r2_floquet",
   "entry_function": "exp_r2_floquet",
-  "task": "T09.R2.FLOQUET",
   "title": "Revision R3: Guangzhou three-criteria Floquet check at the revised calibration points",
-  "kind": "EXPERIMENT",
-  "status": "READY",
-  "implementation": "IMPLEMENTED",
   "model": "model_mwspm_gen3_rhohat",
   "model_version": "gen3_rhohat",
-  "claims": [],
-  "decision": "protocols/decisions/2026-10-18_major_revision.md",
   "mu_variant": "raw",
-  "period": "329-day daily zero-order-held artificial repetition",
   "points": {
-    "stable_rho08": {"run": "20261018T162026_4d17af05", "source": "data/stable_fit.json", "key": "lag1", "rho": 0.8},
-    "profile_min": {"run": "20261018T171227_3dc71f2f", "source": "data/rho_profile_pure.csv", "lag": 1, "rho": 0.45}
-  },
-  "regression": {
-    "series": "theory/derivations/gzhou_t1201_daily_series.csv",
-    "expected": {
-      "sup_R0": 3.5568808860226269,
-      "R0_envelope": 7.5363489222908617,
-      "zoh_rho": 1.3326414289385216e-10,
-      "zoh_kappa_F": 4.8268434706327907
+    "stable_rho08": {
+      "run": "20261018T162026_4d17af05",
+      "source": "data/stable_fit.json",
+      "key": "lag1",
+      "rho": 0.8
     },
-    "relative_tolerance": 1e-9
+    "profile_min": {
+      "run": "20261018T171227_3dc71f2f",
+      "source": "data/rho_profile_pure.csv",
+      "lag": 1,
+      "rho": 0.45
+    }
   },
-  "acceptance": "Numerical criteria at named calibration points. Not a proof of a natural multi-year cycle; the 329-day period is an artificial repetition of the observed window.",
   "deterministic": true,
-  "outputs": ["floquet_revised.json", "floquet_revised.csv"]
+  "outputs": [
+    "floquet_revised.json",
+    "floquet_revised.csv"
+  ]
 }

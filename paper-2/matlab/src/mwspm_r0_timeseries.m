@@ -7,12 +7,12 @@ function R = mwspm_r0_timeseries(D, p, opts)
 %       opts.caliber     'Nv' (default) | 'V'
 %       opts.V           in-model vector abundance V(t) per day; REQUIRED for
 %                        caliber 'V' (it must come from a solve, not be assumed)
-%       opts.coef        optional thermal-coefficient override (T14.02 trait
+%       opts.coef        optional thermal-coefficient override (the analysis trait
 %                        sensitivity); forwarded to mwspm_thermal_traits, OFF by
 %                        default.  R0(t) IS affected by the trait curves, so the
 %                        override changes a genuinely T-dependent quantity.
 %
-%   CALIBER (T07.01, resolved by T08 as: default N_v):
+%   CALIBER (the analysis, resolved by T08 as: default N_v):
 %     'Nv'  m(t) = m0*s(t)          -> "vector-supply caliber" (consistent with
 %                                      the initial version of the paper)
 %     'V'   m(t) = V(t)/N_h         -> "in-model abundance caliber"; needs the
@@ -51,7 +51,7 @@ switch caliber
     case 'V'
         assert(isfield(opts, 'V') && ~isempty(opts.V), 'mwspm:r0', ...
             ['caliber ''V'' requires opts.V (the solved in-model vector abundance). ' ...
-             'V(t) is a first-order lag filter of N_v(t) and must not be assumed equal to it (CL-16).']);
+             'V(t) is a first-order lag filter of N_v(t) and must not be assumed equal to it (the statement).']);
         V = double(opts.V(:));
         assert(numel(V) == D.n_days, 'mwspm:r0', 'opts.V must have n_days entries');
         mVec = V / p.N_h;

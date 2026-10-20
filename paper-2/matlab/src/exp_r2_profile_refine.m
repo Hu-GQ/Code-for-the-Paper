@@ -87,7 +87,7 @@ end
 writetable(rows, fullfile(ctx.dataDir, 'refine_anchors.csv'));
 summary = struct();
 summary.interpretation = ['local reproducibility of named profile anchors; ' ...
-    'no confidence set and no global-optimum claim'];
+    'no confidence set and no global-optimum statement'];
 summary.n_anchors = height(rows);
 summary.n_improved = sum(rows.improvement > 1e-6);
 summary.all_starts_converged = all(rows.n_starts_converged == rows.n_starts);

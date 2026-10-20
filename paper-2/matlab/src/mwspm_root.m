@@ -5,7 +5,7 @@ function root = mwspm_root()
 %   contains config/project.json.  The search starts at the directory of
 %   THIS file (<root>/src/matlab) and walks upwards, so the result does NOT
 %   depend on the current working directory, on the MATLAB base workspace or
-%   on any GUI state (protocols/PROJECT_RULES.md Sec.4.1/4.2).
+%   on any GUI state (the project record Sec.4.1/4.2).
 %
 %   The answer is cached for the duration of the session because the file
 %   location cannot change while MATLAB is running.

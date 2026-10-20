@@ -26,12 +26,10 @@ paper-2/
 ├── requirements.txt           Python side (build + verification utilities)
 ├── matlab/
 │   ├── reproduce.m            single entry point / dispatcher
-│   ├── src/                   model, calibration, inference, verification (62 .m)
-│   └── plots/                 figure scripts, incl. pp_util.m (14 .m)
-├── configs/                   frozen configuration of every experiment (25 .json)
+│   ├── src/                   model, calibration, inference, verification
+│   └── plots/                 figure scripts, incl. pp_util.m
 ├── python/
-│   ├── verify_deposit.py      checks every file against DEPOSIT.sha256
-│   └── tools/                 literature screening, hash utilities
+│   └── verify_deposit.py      checks every file against DEPOSIT.sha256
 ├── data/                      surveillance and weather inputs actually used
 ├── results/                   derived tables cited in the paper, one file per run
 ├── figures/
