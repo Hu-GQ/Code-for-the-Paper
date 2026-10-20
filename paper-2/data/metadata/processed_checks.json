@@ -1,0 +1,27 @@
+{
+  "n_rows": 47,
+  "week_index_range": [
+    1,
+    47
+  ],
+  "iso_week_range": [
+    6,
+    52
+  ],
+  "date_range": [
+    "2025-02-03",
+    "2025-12-28"
+  ],
+  "local_total": 767,
+  "imported_total": 78,
+  "expected_local_total": 767,
+  "expected_imported_total": 78,
+  "week_index_contiguous": true,
+  "iso_minus_index_constant": [
+    5
+  ],
+  "peak_week_index": 37,
+  "first_nonzero_week_index": 19,
+  "checks_passed": true,
+  "failures": []
+}

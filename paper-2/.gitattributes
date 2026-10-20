@@ -1,0 +1,4 @@
+# The deposit is verified byte-for-byte against DEPOSIT.sha256;
+# disabling text conversion keeps the committed bytes identical to the
+# hashed bytes, independent of the platform that clones the repository.
+* -text

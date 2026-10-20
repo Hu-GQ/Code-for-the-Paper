@@ -1,0 +1,7 @@
+# Python side only: building the PDF, exporting figures, verifying the deposit.
+# The model and every reported number come from MATLAB R2025b (no toolbox);
+# Python is never used for fitting.
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8
+PyMuPDF>=1.24

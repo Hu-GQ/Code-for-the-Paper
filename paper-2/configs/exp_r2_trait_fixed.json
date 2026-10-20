@@ -1,0 +1,169 @@
+{
+  "experiment_id": "exp_r2_trait_fixed",
+  "entry_function": "exp_r2_trait_pure",
+  "task": "T12.R2b2",
+  "title": "Major revision R2b2: trait substitution at a common reporting ratio",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "claims": [],
+  "decision": "protocols/decisions/2026-10-18_major_revision.md",
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025,
+    "fast": true
+  },
+  "mu_variant": "day",
+  "lag": 1,
+  "phase_penalty": false,
+  "objective": "pure Poisson negative log likelihood; all seven continuous parameters free",
+  "free": [
+    "m0",
+    "onset_doy",
+    "offset_doy",
+    "mu_s",
+    "gamma",
+    "beta"
+  ],
+  "box_source": "mwspm_calib_theta('box'); rho keeps the source bound [0.02,0.80] for every set",
+  "warm_run": "20261018T162026_4d17af05",
+  "trait_set_order": [
+    "albopictus_tableA_baseline",
+    "aegypti_tableB_swap",
+    "hybrid_LH2014_a_sigma_mu"
+  ],
+  "trait_sets_note": "Coefficient triples and alternative functional forms are copied verbatim from exp_t14_trait_source_swap.json and exp_t14_trait_source_swap_c1.json; this config repeats them so the revised run is self-contained.",
+  "trait_sets": {
+    "albopictus_tableA_baseline": {
+      "kind": "coef",
+      "coef": {
+        "a": [
+          0.000193,
+          10.25,
+          38.32
+        ],
+        "b": [
+          0.000735,
+          15.84,
+          36.4
+        ],
+        "c": [
+          0.000439,
+          3.62,
+          36.82
+        ],
+        "sigma_v": [
+          0.000109,
+          10.39,
+          43.05
+        ],
+        "lf": [
+          -1.43,
+          13.41,
+          31.51
+        ]
+      }
+    },
+    "aegypti_tableB_swap": {
+      "kind": "coef",
+      "coef": {
+        "a": [
+          0.000202,
+          13.35,
+          40.08
+        ],
+        "b": [
+          0.000849,
+          17.05,
+          35.83
+        ],
+        "c": [
+          0.000491,
+          12.22,
+          37.46
+        ],
+        "sigma_v": [
+          6.65e-05,
+          10.68,
+          45.9
+        ],
+        "lf": [
+          -0.148,
+          9.16,
+          37.73
+        ]
+      }
+    },
+    "hybrid_LH2014_a_sigma_mu": {
+      "kind": "alt",
+      "coef": {
+        "b": [
+          0.000735,
+          15.84,
+          36.4
+        ],
+        "c": [
+          0.000439,
+          3.62,
+          36.82
+        ]
+      },
+      "alt": {
+        "a": {
+          "form": "linear",
+          "par": [
+            0.0043,
+            0.0943
+          ],
+          "range": [
+            21.0,
+            32.0
+          ],
+          "outside": "clip"
+        },
+        "sigma_v": {
+          "form": "eip_exp",
+          "par": [
+            4.0,
+            5.15,
+            0.1237
+          ]
+        },
+        "mu": {
+          "form": "poly_direct_mu",
+          "par": [
+            3.809e-06,
+            -0.0003408,
+            0.01116,
+            -0.159,
+            0.8692
+          ]
+        }
+      }
+    }
+  },
+  "optimiser": {
+    "n_screen": 0,
+    "n_seed": 0,
+    "restarts": 2,
+    "seed": 13,
+    "maxFunEvals": 8000,
+    "maxIter": 8000,
+    "TolX": 1e-06,
+    "TolFun": 1e-09,
+    "verbose": true
+  },
+  "acceptance": "Conditional refits under one numerical and statistical specification. tau* shifts and Delta-BIC are descriptive; the fit is not claimed to discriminate trait sets and no rho estimate is reported.",
+  "deterministic": true,
+  "outputs": [
+    "trait_refit_pure.csv",
+    "trait_summary.json",
+    "solver_check.json"
+  ],
+  "solver_note": "fast=true selects the inlined RK4 stages; verified bitwise identical to the dailyRhs path at three parameter points (max|diff| = 0.0).",
+  "warm_from_run": "20261018T174814_3ce1eacb",
+  "fixed_rho": 0.8,
+  "note": "Same three trait sets, refitted with rho FIXED at 0.8 so that the onset-week difference measures the trait curves rather than the drift along the nearly flat rho ridge."
+}

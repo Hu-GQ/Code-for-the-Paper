@@ -1,0 +1,44 @@
+{
+  "point": {
+    "rho": 0.8,
+    "d_weeks": 1,
+    "m0": 2.0905193275288663,
+    "onset_doy": 186.39973343472423,
+    "offset_doy": 263.27288085125173,
+    "mu_s": 14.999999999946592,
+    "gamma": -1.5539888067371042,
+    "beta": -2.0517829590107368
+  },
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025,
+    "fast": true
+  },
+  "mu_variant": "day",
+  "baseline": {
+    "reported_total": 767.5873082988154,
+    "true_total": 959.49054990505886,
+    "tau_star": 20,
+    "sup_R0": 3.4656149268891689
+  },
+  "n_variants": 30,
+  "reported_total_min": 43.334042234774969,
+  "reported_total_max": 205170.90070881581,
+  "true_total_min": 54.167761897140558,
+  "true_total_max": 256471.12397951831,
+  "tau_star_unique": [
+    19,
+    20,
+    21
+  ],
+  "sup_R0_min": 2.788997825762134,
+  "sup_R0_max": 4.0731490249507978,
+  "peak_week_unique": [
+    23,
+    26,
+    28,
+    36,
+    37,
+    38
+  ]
+}

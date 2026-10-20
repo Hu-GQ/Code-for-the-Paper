@@ -1,0 +1,83 @@
+{
+  "experiment_id": "exp_t14_identifiability",
+  "entry_function": "exp_t14_identifiability",
+  "task": "T14.03",
+  "title": "T14 §5-5 onset–gamma 可辨识性（多起点散布 + 联合剖面 + 灵敏度/共线性诊断）",
+  "kind": "EXPERIMENT_DETERMINISTIC",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "claims": [],
+  "claim_note": "本实验不承载主张：它是 C3 遗留的可辨识性诊断（Methods/局限用）。T12 审计已在灵敏度层面报告过 7 维共线集；本实验把 onset/gamma 的**个别**可辨识性做成可报数（1 维剖面区间 + 2 维联合域 + 多起点散布）。",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "purpose": "回答 EXPERIMENT_PLAN.md §5-5：季节窗起始 onset 与季内趋势 gamma 是否**各自**可辨识；若不可辨识，则只报**联合约束**（近优集合的脊方向）而不报单参数区间。",
+  "design": "四条互不替代的证据，全部固定主报告点的整数滞后 d=1：(A) 7 维灵敏度/共线性诊断（mwspm_calib_sensitivity：SVD、Belsley 条件指数与共线集、估计量相关矩阵）；(B) **多起点散布**：在 (onset,gamma) 平面上 8x8 = 64 个显式起点，各跑一次 Nelder-Mead（**不做随机筛选**，因为 T12 已证明随机筛选的 spread 只反映采样距离、不反映优化器可靠性），记录各局部最优与 J；(C) **1 维剖面**：固定 onset（或 gamma）后重优化其余 6 个参数，得各参数的 Wilks 95% 区间（chi2_1/2 = 1.9207）；(D) **2 维联合剖面**：固定 (onset,gamma) 后重优化其余 5 个参数，得 9x9 的 Δnll 图与 95% 联合域（chi2_2/2 = 2.9957）。",
+  "parent_run_id": null,
+  "parent_note": "自动发现 results/runs/ 下最新一条 status=SUCCESS 且 provenance.experiment_id='exp_c4_rho_fit' 的运行，取其 main_report_point.theta 作为 (i) 剖面参考点与 (ii) 每个网格点/起点的 warm start。",
+  "initial_conditions": null,
+  "parameter_domain": {
+    "scan_kind": "identifiability_grid",
+    "fixed_lag": 1,
+    "free_full": ["m0", "rho", "onset_doy", "offset_doy", "mu_s", "gamma", "beta"],
+    "refit_6_when_1d": ["m0", "rho", "offset_doy", "mu_s", "gamma", "beta"],
+    "refit_6_when_1d_gamma": ["m0", "rho", "onset_doy", "offset_doy", "mu_s", "beta"],
+    "refit_6_note": "被剖面的那一个参数必须从 free 列表里去掉、并出现在 fixed 里；两个列表分别对应『剖面 onset』与『剖面 gamma』，入口函数会断言它们分别等于 free_full 去掉对应参数，防止列表漂移（2026-10-07 首次实现时正是这里把 gamma 同时放进 free 与 fixed，导致 kernel 收到缺 onset_doy 的 theta 而失败，该失败运行保留）。",
+    "refit_5_when_2d": ["m0", "rho", "offset_doy", "mu_s", "beta"],
+    "multistart_grid": {
+      "onset_doy": {"center": "fit", "halfwidth": 30.0, "n": 8},
+      "gamma": {"center": "fit", "halfwidth": 0.6, "n": 8},
+      "note": "8x8 = 64 显式起点；其余 5 个参数固定在主报告点。每个起点一次 NM（n_screen=0, n_seed=0, restarts=0），故每个起点给出一个**局部最优**。"
+    },
+    "profile_onset": {"halfwidth": 40.0, "step": 4.0, "n": 21, "unit": "day-of-year"},
+    "profile_gamma": {"halfwidth": 0.8, "step": 0.08, "n": 21, "unit": "dimensionless"},
+    "joint_onset": {"halfwidth": 30.0, "step": 7.5, "n": 9},
+    "joint_gamma": {"halfwidth": 0.6, "step": 0.15, "n": 9},
+    "warm_start_note": "所有拟合都以主报告点（或把被固定坐标替换为网格值后的主报告点）作 warm start，并用 n_screen=0 关闭随机筛选。理由：实测随机筛选（600 个均匀点 + 3 个晋级）在本问题上只能到 J=-1914.6，而参考点 J=-2069.0 —— 筛选失败会伪装成『不可辨识』。"
+  },
+  "acceptance_criterion": {
+    "wilks_1d_dnll": 1.9207,
+    "wilks_2d_dnll": 2.9957,
+    "wilks_note": "chi2_1(0.95)/2 = 1.9207（1 维）；chi2_2(0.95)/2 = 5.9915/2 = 2.9957（2 维）。1 维分位数由 mwspm_chisq1_quantile 提供；2 维由 -log(0.05) 闭式给出（本机无 Statistics Toolbox）。",
+    "verdict_rule": "NOT_IDENTIFIABLE：onset 或 gamma 的 1 维 95% 区间**触及网格边界**（即在网格内不闭合），或 2 维 95% 联合域触及任一方向边界；IDENTIFIABLE：两者 1 维区间均在网格内闭合**且** 2 维联合域不触边；其余 = PARTIALLY_IDENTIFIABLE。判定只看上述规则，不得事后改口。",
+    "corr_threshold": 0.98,
+    "corr_rule": "若多起点近优集合(ΔJ <= wilks_1d_dnll)中 onset 与 gamma 的相关系数 |r| >= 0.98，则报告『两者不可分别识别，只能给脊方向上的联合约束』；否则两个参数须分别报告区间，并注明其联合域形状。",
+    "must_report": ["onset 1 维区间", "gamma 1 维区间", "2 维联合域范围与是否触边", "多起点散布（个数/范围/相关系数/是否只有一个吸引域）", "7 维条件指数与共线集（与 T12 审计的对照）"]
+  },
+  "termination": {"t0_date": "2025-02-03", "t_end_days": 329, "t_end_date": "2025-12-28", "events": []},
+  "report_grid": {"kind": "weekly", "weekly_edges_days": 7.0},
+  "solvers": [
+    {"id": "nm_local", "kind": "local", "method": "fminsearch_nelder_mead_on_bounded_sigmoid_map",
+     "note": "与 T12.01/T12 审计同一个 mwspm_calib_fit（同一目标函数：Poisson nll + 相位软惩罚 pi=300/target=37）。边界由 mwspm_calib_theta 的 pack/unpack sigmoid 映射**按构造**满足，不用罚函数。",
+     "maxFunEvals": 6000, "maxIter": 6000, "TolX": 1e-8, "TolFun": 1e-9}
+  ],
+  "metrics": [
+    "onset_profile_ci95_low_high",
+    "gamma_profile_ci95_low_high",
+    "joint_region_extent_onset_gamma",
+    "joint_region_touches_boundary",
+    "multistart_near_optimal_count",
+    "multistart_onset_range",
+    "multistart_gamma_range",
+    "multistart_corr_onset_gamma",
+    "multistart_principal_direction",
+    "sensitivity_condition_number",
+    "sensitivity_collinear_sets",
+    "corr_estimates_onset_gamma",
+    "verdict"
+  ],
+  "controls": [
+    "参考点自洽：以主报告点为 warm start 的 NM 必须回到 J <= 主报告点 J + 1e-6（否则说明映射/目标被改动）",
+    "与 T12 审计的灵敏度对照（同一目标函数、不同参考点：legacy 参考点 vs 主报告点）",
+    "1 维剖面与 2 维联合域必须一致：2 维域在 onset 轴上的投影不得窄于 onset 的 1 维区间"
+  ],
+  "deterministic": true,
+  "outputs": ["sensitivity.json", "multistart_scatter.csv", "profile_1d_onset.csv", "profile_1d_gamma.csv", "joint_profile_2d.csv", "verdict.json", "summary.json"],
+  "honesty": [
+    "『不可辨识』是**结论**而不是失败：不得为了得到漂亮区间而改网格、改阈值或只报其中一个参数。",
+    "多起点散布的 spread 本身不是置信域；只有 ΔJ <= Wilks 判据的**近优集合**才可以用来描述联合约束。",
+    "参数相关的『个别区间』与『联合域』必须同时报告；只报 1 维区间会在脊状似然上给出误导性的精确感。",
+    "本实验不产生新的数据证据，也不改变 T12.01 的主报告点；它只刻画该点附近的可辨识性结构。"
+  ],
+  "blocked_by": null,
+  "blocked_by_note": "依赖 T12.01 的真实运行产物（fit_best.json）；找不到父 run 时以明确错误退出。"
+}

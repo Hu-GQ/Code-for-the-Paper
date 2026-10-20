@@ -1,0 +1,91 @@
+{
+  "experiment_id": "exp_c4_branching",
+  "entry_function": "exp_c4_branching",
+  "task": "T13.02",
+  "title": "C4 随机模拟：时变两型分支过程 + 检出比例 rho",
+  "kind": "EXPERIMENT_STOCHASTIC",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "claims": ["CL-01", "CL-09"],
+  "claim_note": "CL-09 是数据证据层（建立概率时间剖面）；C4 主张 CL-01 只依赖 T0 口径，随机模拟用于对照与稳健性，不作为 C4 的立论基础。",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "purpose": "在时变 4 型（E_h/I_h/E_v/I_v）分支过程上计算建立概率的逐周剖面，并与 (a) Carmona & Gandon 2020 式(2) 的单型对照、(b) 冻结速率的准静态近似（义务 O8）、(c) 确定性 τ* = 19 与观测起始周 19 对照。",
+  "design": "两级执行：① 后向 Kolmogorov 方程给出 p_surv 与 p_est 的**精确解**，跑满 (tau x rho) 网格；② 随机模拟（tau-leap，N_sim = 1e4/点）在子集上验证，并给出首次检出周的**经验分布**（真正的重复分布）。另跑 p_target/4 的细化以**测量**离散化误差。",
+  "initial_conditions": null,
+  "parent_run_id": null,
+  "parent_note": "自动发现最近一个 SUCCESS 的 exp_c4_rho_fit 运行取其 main_report_point 的 theta；另自动发现 exp_c4_gate_g1 运行取其 τ* 与观测起始周用于对照。",
+  "parameter_domain": {
+    "scan_kind": "grid",
+    "tau_weeks": {"from": 1, "to": 47, "step": 1},
+    "tau_sim_subset_weeks": [1, 5, 9, 13, 17, 19, 21, 25, 29, 33, 37, 41, 45],
+    "rho_grid": {"values": [0.13, 0.30, 0.50, 0.80, 1.00], "note": "0.13 为外部证据极值（Undurraga EF=7.6）；0.80 为 hat rho；1.00 为无漏报上界"},
+    "seed_idx": 1,
+    "note": "分支过程的转移速率取自同一确定性轨迹的**时变**日强迫（ZOH），Lambda = 0；冻结速率版本单列为准静态近似（义务 O8）。"
+  },
+  "variants": ["day", "raw"],
+  "variants_note": "day = 源忠实日变换（拟合所用口径，主口径）；raw = 连续速率（敏感性）。两者都必须报告，不得只报其中一个。",
+  "dt_refinement_tau_weeks": [19, 21, 33],
+  "dt_refinement_rho": [0.13, 0.80],
+  "dt_refinement_note": "tau-leap 的离散化误差靠 p_target 与 p_target/4 两次运行的差值**测量**，不做假设。",
+  "termination": {
+    "t0_date": null,
+    "t0_note": "以周为单位：单例输入置于第 tau 周的起点（t = 7*(tau-1) 天），推进到第 47 周结束（t = 329 天）。",
+    "t_end_weeks": 47,
+    "events": [
+      {"name": "establishment", "kind": "threshold", "state_index": 0, "direction": 1, "threshold": 1.0,
+       "description": "谱系产生至少 1 例**被检出**的本地（续发）人感染即视为『已建立』；输入的指示病例本身不计入，否则估计量退化为 P >= rho"},
+      {"name": "extinction", "kind": "threshold", "state_index": 0, "direction": -1, "threshold": 1.0,
+       "description": "感染个体总数归零（谱系灭绝）"}
+    ]
+  },
+  "report_grid": {"kind": "weekly", "weekly_edges_days": 7.0},
+  "solvers": [
+    {"id": "backward_kolmogorov", "kind": "exact", "method": "ode15s_backward",
+     "reference": "后向 Kolmogorov 方程；4 型时变分支过程的精确解",
+     "max_step_days": 0.1, "rel_tol": 1e-10, "abs_tol": 1e-12,
+     "note": "p_surv 与 p_est 的精确值**唯一来源**；随机模拟是被它校验的一方，不是反过来。"},
+    {"id": "carmona_gandon_eq2", "kind": "analytic", "method": "closed_form",
+     "reference": "Carmona & Gandon 2020, PLoS Comput Biol 16(7):e1007954, Eq.(2) (single-type limit)",
+     "note": "解析对照必须先跑全网格；引用文献值不得宣称原创（EXPERIMENT_PLAN Sec.4）。单型归约按 (R0, r) 矩匹配，属**声明的近似**，其与精确 4 型解的偏差被测量。"},
+    {"id": "stoch_branching", "kind": "fixed_step", "method": "tau_leap", "dt_days": 1.0, "tau_weeks": 1.0,
+     "n_sim": 10000, "p_target": 0.05, "clamp_nonnegative": true}
+  ],
+  "rng": {
+    "generator": "mt19937ar",
+    "seed_policy": "每个 (tau, rho) 组合一个独立 RandStream：Seed = base_seed + 1000*round(100*rho) + tau；重复索引由抽取顺序决定",
+    "base_seed": 20251005,
+    "substream_note": "原配置写『每个 (tau,rho,sim) 一条子流』，实际改为每个 (tau,rho) 一条流：为 1e4 个重复各建一个 RandStream 对象在工程上不可行，且两者对可复现性是等价的（种子确定、无时间戳）。此偏离已在此登记。"
+  },
+  "metrics": [
+    "p_surv_by_week",
+    "p_est_by_week",
+    "p_carmona_by_week",
+    "p_static_by_week",
+    "pe_sim_vs_exact_abs_diff_in_mc_se",
+    "dt_refinement_fine_minus_coarse",
+    "detection_week_quantiles",
+    "peak_week_and_n_interior_local_maxima",
+    "n_sim",
+    "seed",
+    "generator"
+  ],
+  "controls": [
+    "解析对照：Carmona & Gandon 2020 Eq.(2) 单型极限（必须引用，不得宣称原创）",
+    "准静态对照：速率在输入周冻结，用于量化义务 O8",
+    "确定性 τ*（T13.01）与观测起始周 19",
+    "精确后向解（随机模拟的唯一校准基准）"
+  ],
+  "deterministic": false,
+  "outputs": ["branching_analytic_grid.csv", "branching_sim_subset.csv", "branching_dt_refinement.csv", "p_establishment_by_week.csv", "raw_choices.csv", "summary.json"],
+  "honesty": [
+    "不得宣称『建立概率剖面的概念』为新发现（CL-09 禁语；Carmona & Gandon 2020 闭式、Guzzetta 2016 Fig 7 已覆盖）。",
+    "分支过程是 DFE 线性化（S_h=N_h, S_v=N_v(t)）且 Lambda=0，是**声明的近似**，必须在方法中标注。",
+    "随机结果必须记录生成器与种子；确定性 ODE/后向解部分不得用重复种子制造区间。",
+    "1e4 次模拟的蒙特卡洛标准误必须一并报告，不得把抽样噪声当结构信号。",
+    "单峰性是**测量量**（内部局部极大个数 <= 1），不是断言；若测得非单峰，CL-09 须改判，不得改用别的估计量去凑出单峰。",
+    "本实验不产出参数不确定区间：rho 是网格，而 T12.01 的 Wilks 带已覆盖整个 [0.02,1.00]。"
+  ],
+  "blocked_by": null,
+  "blocked_by_note": "闸门 G1（T13.01）已于 2026-10-06 判定 GO，B1 已解除；G0 = S3b 已裁定，B8 已解除。"
+}

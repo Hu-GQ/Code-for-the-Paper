@@ -1,0 +1,27 @@
+{
+  "experiment_id": "exp_r2_trait_oat",
+  "entry_function": "exp_r2_trait_oat",
+  "task": "T14.02.R2",
+  "title": "Revision R3: thirty one-at-a-time trait-coefficient perturbations on the revised calibration",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "claims": [],
+  "decision": "protocols/decisions/2026-10-18_major_revision.md",
+  "point_run": "20261018T162026_4d17af05",
+  "lag": 1,
+  "mu_variant": "day",
+  "solver": {"solver": "rk4", "dt": 0.025, "fast": true},
+  "perturbations": {
+    "traits": ["a", "b", "c", "sigma_v", "lf"],
+    "c_relative": 0.1,
+    "T0_shift_C": 1.0,
+    "Tm_shift_C": 1.0,
+    "note": "lf has a negative curvature coefficient (-1.43); +/-10% keeps the sign. T0/Tm are absolute shifts in deg C. Same design as exp_t14_trait_robustness, different numerical specification."
+  },
+  "acceptance": "Descriptive sensitivity at one conditional calibration point. The 30 variants are not a probability sample of trait uncertainty and give no interval.",
+  "deterministic": true,
+  "outputs": ["oat_variants.csv", "oat_summary.json"]
+}

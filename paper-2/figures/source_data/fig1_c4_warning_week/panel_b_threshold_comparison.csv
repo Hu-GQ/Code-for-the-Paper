@@ -1,0 +1,6 @@
+caliber,label,week_lo,week_hi
+T0,lag 1,19,20
+T0,lag 2,18,20
+cum,1 case,19,19
+cum,100 cases,26,26
+cum,500 cases,35,35

@@ -1,0 +1,77 @@
+{
+  "regression": {
+    "n_days": 329,
+    "sup_R0": 3.5568808860226269,
+    "peak_day": 149,
+    "peak_week": 22,
+    "R0_envelope": 7.5363489222908617,
+    "kappa_star": 0.017606701649732385,
+    "envelope_spectral_abscissa": 0.2979623158367557,
+    "zoh_period_days": 329,
+    "zoh_logrho": -22.738687920474671,
+    "zoh_rho": 1.3326414289385216E-10,
+    "zoh_kappa_F": 4.8268434706327907,
+    "zoh_kappa_root_logrho": 8.8817841970012523E-16,
+    "safety_factor": 2.1188083502897825,
+    "linear_period_days": 328,
+    "linear_logrho": -22.891278317750327,
+    "linear_rho": 1.1440477277975835E-10,
+    "linear_logrho_step_difference": -2.4514299923339422E-8,
+    "linear_kappa_F": 4.9244973254045963,
+    "linear_kappa_root_logrho": 7.3800248578947958E-8
+  },
+  "points": {
+    "stable_rho08": {
+      "n_days": 329,
+      "sup_R0": 3.4656149268891689,
+      "peak_day": 149,
+      "peak_week": 22,
+      "R0_envelope": 7.7113540702460917,
+      "kappa_star": 0.016816620019865249,
+      "envelope_spectral_abscissa": 0.31538679971456923,
+      "zoh_period_days": 329,
+      "zoh_logrho": -23.683022733295463,
+      "zoh_rho": 5.1831516072035876E-11,
+      "zoh_kappa_F": 5.0655085047045141,
+      "zoh_kappa_root_logrho": 3.7747582837255322E-15,
+      "safety_factor": 2.2251041252202866,
+      "theta": {
+        "rho": 0.8,
+        "d_weeks": 1,
+        "m0": 2.0905193275288663,
+        "onset_doy": 186.39973343472423,
+        "offset_doy": 263.27288085125173,
+        "mu_s": 14.999999999946592,
+        "gamma": -1.5539888067371042,
+        "beta": -2.0517829590107368
+      },
+      "supply_caliber": "N_v(t) = m0 N_h s(t); mu_eff = mu_s mu_v_raw(T)"
+    },
+    "profile_min": {
+      "n_days": 329,
+      "sup_R0": 3.8099276911946665,
+      "peak_day": 149,
+      "peak_week": 22,
+      "R0_envelope": 8.2860835989189727,
+      "kappa_star": 0.014564694473323444,
+      "envelope_spectral_abscissa": 0.33353402157453643,
+      "zoh_period_days": 329,
+      "zoh_logrho": -22.32793086760806,
+      "zoh_rho": 2.0095685802313224E-10,
+      "zoh_kappa_F": 4.5137033442378627,
+      "zoh_kappa_root_logrho": -7.3274719625260332E-15,
+      "safety_factor": 2.174866367692331,
+      "theta": {
+        "rho": 0.45,
+        "d_weeks": 1,
+        "m0": 2.346652789,
+        "mu_s": 14.99999999,
+        "onset_doy": 185.0000009,
+        "offset_doy": 263.5144918,
+        "gamma": -1.674469888,
+        "beta": -2.094590372
+      },
+      "supply_caliber": "N_v(t) = m0 N_h s(t); mu_eff = mu_s mu_v_raw(T)"
+    }
+  }
+}

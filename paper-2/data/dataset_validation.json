@@ -1,0 +1,16 @@
+{
+  "city": "Guangzhou",
+  "year": 2025,
+  "local_reported_total": 767,
+  "imported_reported_total": 78,
+  "case_total_scope": "official city-level weekly reports, 2025 weeks 6-52 only",
+  "case_coverage_start": "2025-02-03",
+  "case_coverage_end": "2025-12-28",
+  "case_covered_days": 329,
+  "case_missing_days": 36,
+  "weather_days": 365,
+  "official_weekly_case_rows": 47,
+  "weekly_rows": 53,
+  "population": 19101000,
+  "validation": "passed_with_expected_case_coverage_gaps"
+}

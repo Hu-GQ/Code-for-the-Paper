@@ -1,0 +1,52 @@
+{
+  "interpretation": "Descriptive conditional refits under one specification; Delta-BIC is not evidence that the fit discriminates trait sets.",
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025,
+    "fast": true
+  },
+  "mu_variant": "day",
+  "n_obs": 47,
+  "n_parameters": 6,
+  "bic": [
+    182.0943750488664,
+    180.91899913401497,
+    182.01665081407603
+  ],
+  "delta_bic_vs_baseline": [
+    0,
+    -1.1753759148514291,
+    -0.077724234790366609
+  ],
+  "tau_star": [
+    20,
+    20,
+    20
+  ],
+  "tau_star_shift_vs_baseline": [
+    0,
+    0,
+    0
+  ],
+  "sets": [
+    "albopictus_tableA_baseline",
+    "aegypti_tableB_swap",
+    "hybrid_LH2014_a_sigma_mu"
+  ],
+  "all_converged": true,
+  "reported_total": [
+    767.58730853794054,
+    767.519207938233,
+    767.49443713950359
+  ],
+  "true_total": [
+    959.49055020487629,
+    959.40150475084522,
+    959.36951456889778
+  ],
+  "rho_hat": [
+    0.8,
+    0.8,
+    0.8
+  ]
+}

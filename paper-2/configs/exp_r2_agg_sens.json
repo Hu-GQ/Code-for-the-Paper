@@ -1,0 +1,31 @@
+{
+  "experiment_id": "exp_r2_agg_sens",
+  "entry_function": "exp_r2_agg_sens",
+  "task": "T12.R2d",
+  "title": "Major revision R2d: weekly R0 aggregation sensitivity of the onset index",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "claims": [],
+  "decision": "protocols/decisions/2026-10-18_major_revision.md",
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025,
+    "fast": true
+  },
+  "mu_variant": "day",
+  "profile_run": "20261018T171227_3dc71f2f",
+  "points": [
+    {"lag": 1, "rho": 0.8, "role": "conditional reference"},
+    {"lag": 1, "rho": 0.45, "role": "lowest primary-branch objective"}
+  ],
+  "phase_penalty": false,
+  "acceptance": "Definitional sensitivity of tau* to the weekly aggregation of R0(t) at fixed fitted parameters; no refitting, no confidence set. Also reports the rho-cancelled fixed-trajectory week.",
+  "deterministic": true,
+  "outputs": [
+    "agg_sensitivity.csv",
+    "agg_summary.json"
+  ]
+}

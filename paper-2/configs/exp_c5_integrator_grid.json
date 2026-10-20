@@ -1,0 +1,131 @@
+{
+  "experiment_id": "exp_c5_integrator_grid",
+  "entry_function": "exp_c5_integrator_grid",
+  "task": "T11.01",
+  "title": "C5 积分器诊断：Delta t x 求解器 x 模型 网格（本项目重跑留痕）",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "claims": ["CL-06", "CL-07"],
+  "claim_note": "CL-06 = 显式欧拉在 mu_eff*dt 越出稳定域时系统性低估报告总量；CL-07 = 偏差随'近临界程度'放大。本实验只做诊断与留痕，不主张新定理（EXPERIMENT_PLAN.md Sec.2.3）。",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "purpose": "量化积分器（固定步长 vs 自适应刚性）对报告总量、双尺度 R2 与峰值周的影响，并给出 '相对偏差 vs mu_eff*dt' 的经验关系。",
+  "design": "全因子网格：dt x method x model，共 5 x 3 x 3 = 45 组；每组从同一初值积分 329 天，输出周聚合与指标，与 ode15s 参考解对齐比较。",
+  "grid": {
+    "dts_days": [1.0, 0.5, 0.25, 0.1, 0.01],
+    "methods": ["euler", "rk4", "ode15s"],
+    "dt_note": "dts_days 仅对 fixed_step(euler/rk4) 生效；ode15s 为自适应，dt 列记为 null 并在结果中以内部网格统计（n_steps/min/max step）代替。",
+    "models": [
+      {
+        "id": "baseline_m0.249",
+        "label": "源模型基线（常数蚊量, 无 mu_s 缩放）",
+        "m0": 0.249029,
+        "mu_s": 1.0,
+        "season": "constant",
+        "note": "源项目 report/REFIT_REPORT.md 的基线 m=0.249029；season=constant 表示 s(t)==1"
+      },
+      {
+        "id": "mwspm_gen3",
+        "label": "M-WSPM 第三代（窗内形状 + 死亡率缩放）",
+        "m0": 1.6637,
+        "mu_s": 12.3044,
+        "season": "window",
+        "note": "**模型卡（legacy）主报告点**；season=window 且不给季节字段 ⇒ 使用模型卡的 onset/offset/gamma/beta（180.668 / 253.456 / -1.5338 / -1.8797）。**保留此条**使 T11.01 的既有结果可逐位复现。"
+      },
+      {
+        "id": "mwspm_gen3_t1201",
+        "label": "M-WSPM 第三代 + T12.01 完整新参数（后续项 P1，2026-10-07 增补）",
+        "m0": 1.853497560474612,
+        "mu_s": 13.677018513938501,
+        "season": "window",
+        "onset_doy": 183.04445357156317,
+        "offset_doy": 264.58428120569238,
+        "gamma": -1.5993772171033778,
+        "beta": -1.8095277414658819,
+        "rho": 0.79999998686221552,
+        "note": "T12.01 BIC 最优主报告点（results/runs/20261006T012933_c2b62344/data/fit_best.json 的 main_report_point.theta，d=1）。**季节窗字段必须一并给出**，否则会造出『新 m0/mu_s + 旧季节窗』的混合参数化（这正是 P1 要修的问题）；入口函数对 onset_doy/offset_doy/gamma/beta/rho 逐个支持覆盖。"
+      }
+    ],
+    "model_field_note": "每个 model 条目必需 m0/mu_s/season；可选 onset_doy/offset_doy/gamma/beta/rho（缺省 = 模型卡值）。实际生效的七个参数会写进 run_log。",
+    "mu_variants": ["raw", "day"],
+    "mu_variant_note": "每个 (model, method) 组合对 raw 与 day 两个死亡率变体各跑一次，用于分离'连续速率口径'与'源代码的口径'。源 dengue_rhs.m 用的是 day 变体（且 mu_s 在其之后再乘），故源保真行 = (method=euler, dt=1, mu_variant=day, clamp=true)。"
+  },
+  "initial_conditions": null,
+  "parameter_domain": {
+    "scan_kind": "grid",
+    "m0": [0.249029, 1.6637, 1.853497560474612],
+    "mu_s": [1.0, 12.3044, 13.677018513938501],
+    "dt_days": [1.0, 0.5, 0.25, 0.1, 0.01],
+    "note": "本实验不拟合任何参数；三条 model 条目的参数分别来自源基线、模型卡 legacy 主报告点、T12.01 新主报告点。"
+  },
+  "termination": {
+    "t0_date": "2025-02-03",
+    "t_end_days": 329,
+    "t_end_date": "2025-12-28",
+    "events": [],
+    "event_note": "不设事件；但固定步长积分器必须检查状态非有限（NaN/Inf）并在发生时以 termination_reason='nonfinite_state' 停止。"
+  },
+  "report_grid": {
+    "kind": "weekly_edges",
+    "weekly_edges_days": 7.0,
+    "daily_step_days": null,
+    "note": "本实验只比较周聚合量，报告网格 = {0,7,14,...,329}；固定步长求解器内部步长 = dt_days，与报告网格无关（dt=0.01 时 32900 步）。"
+  },
+  "solvers": [
+    {"id": "euler_dt1.0", "kind": "fixed_step", "method": "euler", "dt_days": 1.0, "clamp_nonnegative": true},
+    {"id": "euler_dt0.5", "kind": "fixed_step", "method": "euler", "dt_days": 0.5, "clamp_nonnegative": true},
+    {"id": "euler_dt0.25", "kind": "fixed_step", "method": "euler", "dt_days": 0.25, "clamp_nonnegative": true},
+    {"id": "euler_dt0.1", "kind": "fixed_step", "method": "euler", "dt_days": 0.1, "clamp_nonnegative": true},
+    {"id": "euler_dt0.01", "kind": "fixed_step", "method": "euler", "dt_days": 0.01, "clamp_nonnegative": true},
+    {"id": "rk4_dt1.0", "kind": "fixed_step", "method": "rk4", "dt_days": 1.0, "clamp_nonnegative": true},
+    {"id": "rk4_dt0.5", "kind": "fixed_step", "method": "rk4", "dt_days": 0.5, "clamp_nonnegative": true},
+    {"id": "rk4_dt0.25", "kind": "fixed_step", "method": "rk4", "dt_days": 0.25, "clamp_nonnegative": true},
+    {"id": "rk4_dt0.1", "kind": "fixed_step", "method": "rk4", "dt_days": 0.1, "clamp_nonnegative": true},
+    {"id": "rk4_dt0.01", "kind": "fixed_step", "method": "rk4", "dt_days": 0.01, "clamp_nonnegative": true},
+    {"id": "ode15s_ref", "kind": "adaptive", "method": "ode15s", "RelTol": 1e-10, "AbsTol": 1e-12, "NonNegative": [1,2,3,4,5,6,7,8]}
+  ],
+  "reference_solution": {
+    "id": "ode15s_ref",
+    "definition": "同模型、同初值、同强迫下 ode15s RelTol=1e-10 / AbsTol=1e-12 的解；以它的周聚合报告总量与峰值周为分母/基准",
+    "max_step_days": 0.25,
+    "max_step_note": "强迫（温度与输入病例）是逐日零阶保持的不连续函数。2026-10-06 实测：不加 MaxStep 时基线模型的参考解只走 18 步、步长最大 32.9 天，累积新发病例被算成 0，使『除以参考值』的相对误差变成 3.7e32 的垃圾量。故参考解强制 MaxStep=0.25 天（小于强迫网格 1 天），以保证跨 discontinuities 被解析。该字段为实现层新增（mwspm_solve 的 opt-in 选项），不改动任何既有运行。",
+    "degeneracy_guard": "若参考解的总真感染量低于 1e-9，相对误差记为 NaN 并置 reference_degenerate=true，不得输出被 0 除放大的数值。",
+    "realisation_note": "EXPERIMENT_PLAN 写 'LSODA'；MATLAB 无 LSODA，本项目以 ode15s 实现并显式登记。"
+  },
+  "metrics": [
+    "reported_total_abs_error",
+    "reported_total_rel_error",
+    "R2_log",
+    "R2_raw",
+    "RMSE_log",
+    "peak_week_model",
+    "peak_week_shift_vs_reference",
+    "max_mu_eff_dt",
+    "n_days_outside_euler_stability",
+    "n_steps",
+    "min_internal_step",
+    "max_internal_step",
+    "termination_reason"
+  ],
+  "controls": [
+    "reference solution = ode15s (tight tolerance) per model and per mu_variant",
+    "analytical: explicit-Euler stability domain for x'=-mu*x is mu*dt<2; count days with |1-mu_eff*dt|>1",
+    "observed weekly local_reported (47 weeks) for R2 metrics"
+  ],
+  "deterministic": true,
+  "outputs": [
+    "grid_results.csv",
+    "grid_results_long.csv",
+    "reference_weekly.csv",
+    "solver_diagnostics.json",
+    "summary.json"
+  ],
+  "honesty": [
+    "数值迹象不是证明；'欧拉不稳定'是通用数值分析结论，不得写成本文发现（CL-06 禁语）。",
+    "必须分别报告 mu_variant=raw 与 day，不得只报对结论有利的一支。",
+    "不得把 '44% 缺口全部来自积分器' 写成结论（CL-07 禁语）；S4 触发条件见 EXPERIMENT_PLAN Sec.9。",
+    "确定性 ODE：不用重复种子制造置信区间；run 间差异必须来自数值方法而非随机性。"
+  ],
+  "blocked_by": null
+}

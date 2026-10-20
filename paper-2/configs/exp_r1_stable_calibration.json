@@ -1,0 +1,123 @@
+{
+  "experiment_id": "exp_r1_stable_calibration",
+  "entry_function": "exp_r1_stable_calibration",
+  "task": "T12.R1",
+  "title": "Major revision R1: pure Poisson conditional stable calibration",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "claims": [],
+  "decision": "protocols/decisions/2026-10-18_major_revision.md",
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025
+  },
+  "mu_variant": "day",
+  "fixed_rho": 0.8,
+  "lag_grid": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "phase_penalty": false,
+  "objective": "pure Poisson negative log likelihood; no argmax peak penalty",
+  "free": [
+    "m0",
+    "onset_doy",
+    "offset_doy",
+    "mu_s",
+    "gamma",
+    "beta"
+  ],
+  "box_source": "mwspm_calib_theta('box'); rho fixed for historical comparison only",
+  "legacy_run": "20261015T050342_9b0254c5",
+  "stable_warm_run": "20261016T223348_1b4838f8",
+  "optimiser": {
+    "n_screen": 0,
+    "n_seed": 0,
+    "restarts": 0,
+    "seed": 13,
+    "maxFunEvals": 2500,
+    "maxIter": 2500,
+    "TolX": 1e-05,
+    "TolFun": 1e-07,
+    "verbose": true
+  },
+  "verification": {
+    "max_weekly_solver_difference": 0.001,
+    "max_nll_solver_difference": 0.001
+  },
+  "acceptance": "Conditional candidates only. Record all start flags and disagreements; no rho inference or global optimum claim. Complete profiles and trait recalibration remain separate tasks.",
+  "deterministic": true,
+  "outputs": [
+    "verification.json",
+    "stable_fit.json",
+    "fit_trace.csv",
+    "summary.json"
+  ],
+  "purpose": "Isolate integration and objective changes at fixed rho=0.8; conditional calibration only.",
+  "design": "Four integer lags, six continuous parameters, two archived-fit starts plus the parameter-box center; pure Poisson NLL.",
+  "initial_conditions": null,
+  "parameter_domain": {
+    "fixed_rho": 0.8,
+    "lag_grid": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "continuous_box_source": "mwspm_calib_theta box"
+  },
+  "termination": {
+    "t0_date": "2025-02-03",
+    "t_end_days": 329,
+    "t_end_date": "2025-12-28",
+    "events": []
+  },
+  "solvers": [
+    {
+      "kind": "fixed_step",
+      "method": "rk4",
+      "dt_days": 0.025,
+      "clamp_nonnegative": false
+    },
+    {
+      "kind": "fixed_step",
+      "method": "rk4",
+      "dt_days": 0.0125,
+      "clamp_nonnegative": false
+    },
+    {
+      "kind": "adaptive",
+      "method": "ode15s",
+      "RelTol": 1e-09,
+      "AbsTol": 1e-11,
+      "MaxStep": 0.125,
+      "NonNegative": [],
+      "restart": "each day with constant coefficients"
+    }
+  ],
+  "metrics": [
+    "nll",
+    "reported_total",
+    "true_total",
+    "peak_week",
+    "exitflag",
+    "step_halving_max_weekly",
+    "ode15s_max_weekly",
+    "ode15s_nll_difference"
+  ],
+  "controls": [
+    "Historical Euler replay at the old lag1 parameters",
+    "RK4 step halving",
+    "Independent daily ode15s with identical forcing"
+  ],
+  "honesty": [
+    "No rho estimate or confidence interval",
+    "Optimizer SUCCESS is separate from inference acceptance",
+    "No global optimum claimed; retain poor basins and evaluation limits"
+  ]
+}

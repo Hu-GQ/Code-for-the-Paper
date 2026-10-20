@@ -1,0 +1,136 @@
+{
+  "experiment_id": "exp_t14_trait_source_swap_c1",
+  "entry_function": "exp_t14_trait_source_swap",
+  "task": "T14.05",
+  "title": "T14 §5-4 部分性状替换（**混合来源** C1：a/σ_v/μ 取自 Liu-Helmersson 2014，b/c 保留 Mordecai 2017）",
+  "kind": "EXPERIMENT_DETERMINISTIC",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "claims": [],
+  "claim_note": "不承载主张：这是 R0(t)/τ*/拟合在『另一篇文献的性状函数』下的稳健性检验。",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "source_swap_scope": {
+    "what_it_is": "**另一条参数化传统（但不是一篇完整来源）**：$a(T)$、$\\sigma_v(T)$、$\\mu(T)$ 换成 Liu-Helmersson et al. 2014（PLoS ONE 9(3):e89783, PMC3946027）的式子；$b(T)$、$c(T)$ **仍用 Mordecai 2017**（因为前者把这两个概率当常数/另一套形式，无法逐性状对换）。",
+    "what_it_is_not": [
+      "**不是**换成一个完整的第二个来源：本性状集是**混合来源（hybrid）**，论文里必须逐项标明哪个性状来自哪一篇。",
+      "**不是**同源换物种（那是 T14.04）：本次用的 a/σ_v/μ 来自**另一篇论文、另一套数据与另一种函数形式**。",
+      "**不是**新的主报告点：T12.01 的 BIC 最优主报告点不变。"
+    ],
+    "coefficient_provenance": {
+      "document": "Liu-Helmersson J, Stenlund H, Wilder-Smith A, Rocklöv J (2014) PLoS ONE 9(3):e89783. Vectorial capacity of Aedes aegypti: effects of temperature and implications for global dengue epidemic potential.",
+      "identifier": "DOI 10.1371/journal.pone.0089783 | Europe PMC PMCID PMC3946027 (isOpenAccess=Y, hasSuppl=Y)",
+      "retrieved": "2026-10-07 经 Europe PMC fullTextXML（139 485 B）；公式在 XML 中是**图片**，经 PMC CDN 取回并用图像读取逐条抄录",
+      "equations": {
+        "a": "式(2)  a(T) = 0.0043*T + 0.0943  [day^-1]，原文注明适用范围 21 <= T <= 32 degC（Scott et al. 泰国周尺度线性拟合）",
+        "sigma_v": "式(5)  n(T) = 4 + exp(5.15 - 0.1237*T)  [天] ⇒ sigma_v(T) = 1/n(T)（外潜伏期 12-36 degC 的指数拟合）",
+        "mu": "式(6)  mu_m(T) = 0.8692 - 0.1590*T + 0.01116*T^2 - 3.408e-4*T^3 + 3.809e-6*T^4  [1/day]（Yang et al. 4 阶多项式，10.54 <= T <= 33.41 degC；最适存活 27.6 degC，约 0.027/day）"
+      },
+      "source_own_forms": "原文的 b（人→蚊）与 c（蚊→人）是**分段线性/热力学函数**，且其模型把二者与 VC 一起使用；**本实验不替换 b/c**（保持 Mordecai 的 Brière 形式），故不引用其式(3)(4)。"
+    },
+    "pre_registered_rules": {
+      "a_outside_range": "**range = [21, 32] degC 之外取端点值（clip）**。理由：原文的线性式只在该区间标定；广州日均温有相当一部分日子在 21 degC 以下，若取 0 会把活跃季前半整段掐掉（那是另一个模型假定），若外推则会把 a 外推到原文献明确未覆盖的区域。**该规则在运行前写死在配置里**，不得在看到结果后更改。",
+      "a_nonnegativity": "clip 后 a 仍为非负（21 degC 处 a=0.1846，32 degC 处 a=0.2320）。",
+      "sigma_v_no_range": "n(T) 无额外截断；T 高时 n→4 天，故 sigma_v <= 0.25 /day。",
+      "mu_direct": "mu 为**直接死亡率**（不再经『寿命的倒数』）：mu_raw = polyval(par, T) 并截断到 [0, mu_cap=5]。tr.lf 在本次运行中是由 mu 反推的**派生量**（tr.lf_derived=true），仅供报告。",
+      "mu_variant": "仍固定为源忠实的 'day' 变体（与 T11.01/T14.02/T14.04 同口径）。"
+    },
+    "sanity_anchors_at_28C": {
+      "expected_a_per_day": 0.2147,
+      "expected_sigma_v_per_day": 0.10637,
+      "expected_EIP_days": 9.401,
+      "expected_mu_per_day": 0.026623,
+      "note": "入口会把实际值打进 run_log（`check @28.0 C`）；这三个数可用来核对式子抄录无误。⚠ **修正记录（2026-10-07 运行后）**：`expected_mu_per_day` 初写为 0.0292，那是运行前的**手算估计**；把式(6)代入 T=28 的**精确值**是 0.026623，实跑得到 0.026623 ✓。本字段只作核对基准、不参与任何计算，故修正它不改变任何数值结果。⚠ 该修正使本文件 sha256 改变 ⇒ 未来运行的 cfghash 由 `913918bd` 变为新值（已归档运行各自冻结了当时的配置副本，证据不受影响）。"
+    }
+  },
+  "parent_run_id": null,
+  "parent_note": "自动发现最新 SUCCESS 的 exp_c4_rho_fit 运行，取其 main_report_point.theta 作固定参数参考点与 warm start。",
+  "initial_conditions": null,
+  "parameter_domain": {
+    "scan_kind": "partial_trait_swap_plus_refit",
+    "fixed_lag": 1,
+    "free_full": ["m0", "rho", "onset_doy", "offset_doy", "mu_s", "gamma", "beta"],
+    "trait_set_order": ["albopictus_tableA_baseline", "hybrid_LH2014_a_sigma_mu"],
+    "trait_set_order_note": "基准必须第一（入口对基准做逐位校验）。",
+    "trait_sets": {
+      "albopictus_tableA_baseline": {
+        "label": "Ae. albopictus（Mordecai 2017 Table A，本项目现用来源）",
+        "a": [1.93e-04, 10.25, 38.32],
+        "b": [7.35e-04, 15.84, 36.40],
+        "c": [4.39e-04, 3.62, 36.82],
+        "sigma_v": [1.09e-04, 10.39, 43.05],
+        "lf": [-1.43, 13.41, 31.51]
+      },
+      "hybrid_LH2014_a_sigma_mu": {
+        "label": "混合来源 C1：a/σ_v/μ = Liu-Helmersson 2014；b/c = Mordecai 2017",
+        "anchor_key": "aegypti",
+        "b": [7.35e-04, 15.84, 36.40],
+        "c": [4.39e-04, 3.62, 36.82],
+        "alt": {
+          "a": {"form": "linear", "par": [0.0043, 0.0943], "range": [21.0, 32.0], "outside": "clip"},
+          "sigma_v": {"form": "eip_exp", "par": [4.0, 5.15, 0.1237]},
+          "mu": {"form": "poly_direct_mu", "par": [3.809e-06, -3.408e-04, 0.01116, -0.1590, 0.8692]}
+        },
+        "alt_par_note": "poly_direct_mu 的 par 是**降幂**顺序（polyval 约定）：[c4 c3 c2 c1 c0] = [3.809e-6, -3.408e-4, 0.01116, -0.1590, 0.8692]。eip_exp 的 par = [floor_days, c1, c2] ⇒ n = floor + exp(c1 - c2*T)。linear 的 par = [slope, intercept] ⇒ a = slope*T + intercept。"
+      }
+    },
+    "r0T_grid": {"from": 5.0, "to": 45.0, "step": 0.1}
+  },
+  "mordecai2017_published_anchors": {
+    "note": "原文 Table A/B 的 R0(T) 锚点（恒温口径）；混合来源的性状集按**埃及伊蚊**锚点比对（LH2014 的对象是 Ae. aegypti）。",
+    "albopictus": {"peak_temperature_C": {"mean": 26.4, "ci95": [25.2, 27.4]},
+                   "lower_zero_temperature_C": {"mean": 16.2, "ci95": [13.2, 19.9]},
+                   "upper_zero_temperature_C": {"mean": 31.6, "ci95": [29.4, 33.7]}},
+    "aegypti":    {"peak_temperature_C": {"mean": 29.1, "ci95": [28.4, 29.8]},
+                   "lower_zero_temperature_C": {"mean": 17.8, "ci95": [14.6, 21.2]},
+                   "upper_zero_temperature_C": {"mean": 34.6, "ci95": [34.1, 35.6]}}
+  },
+  "andraud2012_ranges": {
+    "source": "Andraud et al. 2012, PLoS ONE 7(11):e49085, Table 2（与温度无关的取值区间）",
+    "adult_lifespan_days": [4.0, 50.0],
+    "EIP_days": [8.0, 12.0],
+    "biting_rate_per_day": [0.3, 1.0],
+    "beta_human_to_mosquito": [0.5, 1.0],
+    "beta_mosquito_to_human": [0.1, 0.75]
+  },
+  "optimiser": {
+    "algorithm": "two_stage_bounded_multistart_nelder_mead",
+    "note": "复用 mwspm_calib_fit（同一目标函数：Poisson nll + 相位软惩罚）。重拟合在 d=1、该性状集下进行，warm start = 主报告点。",
+    "n_screen": 300, "seeds": [13, 47], "n_seed": 3, "restarts": 1,
+    "maxFunEvals": 3000, "maxIter": 3000, "TolX": 1e-8, "TolFun": 1e-9
+  },
+  "termination": {"t0_date": "2025-02-03", "t_end_days": 329, "t_end_date": "2025-12-28", "events": []},
+  "report_grid": {"kind": "weekly", "weekly_edges_days": 7.0},
+  "solvers": [
+    {"id": "trait_set_analysis", "kind": "none", "method": "post_processing_plus_fixed_step_kernel",
+     "note": "R0(t) 为周尺度代数量；tau* 由 mwspm_calib_kernel 在该性状集下重解轨迹后按 T0(w)=rho/log R0(w) 判定。"}
+  ],
+  "metrics": [
+    "tau_star_by_partial_swap_fixed_params",
+    "tau_star_by_partial_swap_refit",
+    "R0_max_by_partial_swap",
+    "R0_gt1_window_by_partial_swap",
+    "refit_nll_aic_bic_by_partial_swap",
+    "refit_theta_by_partial_swap",
+    "R0T_anchors_by_partial_swap",
+    "andraud_range_flags_by_partial_swap",
+    "trait_values_at_28C"
+  ],
+  "controls": [
+    "基准集逐位校验（必须等于 Mordecai Table A 的现用值；入口用 assert 强制）",
+    "28 degC 性状核对（a=0.2147、sigma_v=0.10637、mu=0.0292；与抄录式子一致才算通过）",
+    "固定参数 vs 重拟合并列（同 T14.04）：前者隔离曲线本身，后者回答换曲线后拟合是否仍站得住",
+    "与 T14.04（同源换物种）并列比较：两种『换曲线』方式给出的 tau* 位移方向与幅度"
+  ],
+  "deterministic": true,
+  "outputs": ["trait_set_fixed_params.csv", "trait_set_refits.csv", "r0T_anchors_by_set.csv", "andraud_range_screen_by_set.csv", "summary.json"],
+  "honesty": [
+    "本性状集是**混合来源**：a/σ_v/μ 来自 Liu-Helmersson 2014，b/c 来自 Mordecai 2017 ⇒ 论文必须逐项标注，**不得**写成『换成另一个完整来源』。",
+    "a(T) 在 [21,32] degC 之外取端点值是**先注册**的假定，不是原文的做法；该选择会影响活跃季前半段的 R0，必须显式报告。",
+    "LH2014 的 μ 是**直接死亡率**（4 阶多项式），本模型仍在其上乘 μ_s ⇒ 二者含义不同，报告时须说明。",
+    "绝对量仍是**格点条件量**（源忠实欧拉 dt=1 天）。",
+    "重拟合参数**不是**新的主报告点；若 τ* 位移与 T14.04 不一致，必须两边都报，不得只报其中一套。"
+  ],
+  "blocked_by": null,
+  "blocked_by_note": "依赖 T12.01 的真实运行产物（fit_best.json）。"
+}

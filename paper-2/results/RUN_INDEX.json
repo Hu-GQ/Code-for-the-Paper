@@ -1,0 +1,86 @@
+[
+ {
+  "run_id": "20261018T171227_3dc71f2f",
+  "file": "rho_profile_pure.csv",
+  "status": "included",
+  "deposit_name": "20261018T171227_3dc71f2f__rho_profile_pure.csv"
+ },
+ {
+  "run_id": "20261018T171227_3dc71f2f",
+  "file": "profile_summary.json",
+  "status": "included",
+  "deposit_name": "20261018T171227_3dc71f2f__profile_summary.json"
+ },
+ {
+  "run_id": "20261018T171227_3dc71f2f",
+  "file": "solver_check.json",
+  "status": "included",
+  "deposit_name": "20261018T171227_3dc71f2f__solver_check.json"
+ },
+ {
+  "run_id": "20261018T173554_7df7f312",
+  "file": "refine_anchors.csv",
+  "status": "included",
+  "deposit_name": "20261018T173554_7df7f312__refine_anchors.csv"
+ },
+ {
+  "run_id": "20261018T173554_7df7f312",
+  "file": "refine_summary.json",
+  "status": "included",
+  "deposit_name": "20261018T173554_7df7f312__refine_summary.json"
+ },
+ {
+  "run_id": "20261018T175739_67747f71",
+  "file": "trait_summary.json",
+  "status": "included",
+  "deposit_name": "20261018T175739_67747f71__trait_summary.json"
+ },
+ {
+  "run_id": "20261018T175933_d8109d33",
+  "file": "trait_summary.json",
+  "status": "included",
+  "deposit_name": "20261018T175933_d8109d33__trait_summary.json"
+ },
+ {
+  "run_id": "20261018T201317_eb0d5375",
+  "file": "floquet_revised.csv",
+  "status": "included",
+  "deposit_name": "20261018T201317_eb0d5375__floquet_revised.csv"
+ },
+ {
+  "run_id": "20261018T201317_eb0d5375",
+  "file": "floquet_revised.json",
+  "status": "included",
+  "deposit_name": "20261018T201317_eb0d5375__floquet_revised.json"
+ },
+ {
+  "run_id": "20261018T201429_dd6a4d52",
+  "file": "oat_variants.csv",
+  "status": "included",
+  "deposit_name": "20261018T201429_dd6a4d52__oat_variants.csv"
+ },
+ {
+  "run_id": "20261018T201429_dd6a4d52",
+  "file": "oat_summary.json",
+  "status": "included",
+  "deposit_name": "20261018T201429_dd6a4d52__oat_summary.json"
+ },
+ {
+  "run_id": "20261018T210504_3ffd906b",
+  "file": "agg_sensitivity.csv",
+  "status": "included",
+  "deposit_name": "20261018T210504_3ffd906b__agg_sensitivity.csv"
+ },
+ {
+  "run_id": "20261018T210504_3ffd906b",
+  "file": "agg_summary.json",
+  "status": "included",
+  "deposit_name": "20261018T210504_3ffd906b__agg_summary.json"
+ },
+ {
+  "run_id": "20261018T162026_4d17af05",
+  "file": "stable_fit.json",
+  "status": "included",
+  "deposit_name": "20261018T162026_4d17af05__stable_fit.json"
+ }
+]

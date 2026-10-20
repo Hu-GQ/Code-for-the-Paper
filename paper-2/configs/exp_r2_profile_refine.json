@@ -1,0 +1,53 @@
+{
+  "experiment_id": "exp_r2_profile_refine",
+  "entry_function": "exp_r2_profile_refine",
+  "task": "T12.R2c",
+  "title": "Major revision R2c: multi-start refinement at profile anchors",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "claims": [],
+  "decision": "protocols/decisions/2026-10-18_major_revision.md",
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025,
+    "fast": true
+  },
+  "mu_variant": "day",
+  "profile_run": "20261018T171227_3dc71f2f",
+  "anchors_per_lag": 3,
+  "extra_rhos": [
+    0.8,
+    0.45
+  ],
+  "phase_penalty": false,
+  "free": [
+    "m0",
+    "onset_doy",
+    "offset_doy",
+    "mu_s",
+    "gamma",
+    "beta"
+  ],
+  "box_source": "mwspm_calib_theta('box')",
+  "warm_run": "20261018T162026_4d17af05",
+  "optimiser": {
+    "n_screen": 0,
+    "n_seed": 0,
+    "restarts": 1,
+    "seed": 13,
+    "maxFunEvals": 4000,
+    "maxIter": 4000,
+    "TolX": 1e-06,
+    "TolFun": 1e-08,
+    "verbose": true
+  },
+  "acceptance": "Refinement of named anchors only. Convergence from three independent starts supports local, not global, reproducibility; no confidence set is derived.",
+  "deterministic": true,
+  "outputs": [
+    "refine_anchors.csv",
+    "refine_summary.json"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "experiment_id": "exp_t12_calibration",
+  "entry_function": "exp_t12_calibration",
+  "task": "T12",
+  "title": "参数估计的独立复核与可辨识性审计（T12 主任务）",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "claims": ["CL-10", "CL-12"],
+  "claim_note": "CL-12 = rho 是数据拟合量、触及参数化上界、剖面区间与外部证据差异须披露（口径声明）；CL-10 = M-WSPM 相对源模型在统一似然下的拟合质量（其『总量缺口』部分由本实验的积分器口径核对支撑）。CL-03（rho 剖面向警戒周的传播）不由本实验承载：那需要 T14.01，仍 BLOCKED。",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "purpose": "对『已有参数估计』（output/results/refit_v3.json 主报告点 + 模型卡登记的拟合值）做独立复核：① 用 MATLAB 独立实现按模型观测方程重算似然并与既有数值逐位核对；② 检验数目分布假设（泊松/过散布/负二项/高斯对照）；③ 结构可辨识性与实际可辨识性诊断并区分固定/估计/不可识别参数；④ 剖面相依区间；⑤ 按时间分块留出检验；⑥ 初值与漏报不确定性；⑦ 合成数据参数回收。本实验不重做 C4 面向的 rho 主报告点（那是 T12.01，仍被闸门 G0/B8 阻断）。",
+
+  "gate_note": "🔴 闸门 G0（C4 抢占裁定 = 阻塞项 B8）仍未裁定，因此 T12.01（exp_c4_rho_fit）维持 BLOCKED、不改动。本实验的对象是『复核既有估计』而不是『为 C4 产出新的 rho 帽值』：(a) 这里给出的 rho 剖面是【可辨识性诊断】，其数值不构成 C4 的主报告口径；(b) 所有绝对量沿用『rho 帽下的条件估计』表述；(c) CLAIMS 的 CL-03/CL-12 状态不因本实验升级，只在证据列追加本运行。若 G0 裁定 S3a，则本实验的复核结论（数据不能排除高 rho、rho 实际不可辨识）仍然成立且已留痕。",
+
+  "design": "八个分块：(A) 既有估计的证书——用 mwspm_calib_kernel 与规范路径 mwspm_rhs+mwspm_integrate_fixed+mwspm_observe 分别求值并测量最大差，并给出整数滞后 d=0..4 的 nll 阶梯。(B) 滞后一致性——把 refit_v3.json 中 11 行 rho 剖面各自『自带的拟合参数向量』直接在 MATLAB 核里在 floor/round/ceil(d) 三个滞后上重放（不重新优化任何东西），从而判定既有剖面的滞后约定；再在固定滞后下重算分支敏感性，并在『解除源约束』(rho 上界放到 1.00) 下自由拟合 rho。(C) 分布假设——在三个参数点比较 poisson / quasi-poisson / NB2 / Anscombe 高斯对照，报告 Pearson 过散布与 NB2 的 theta 一维剖面极大似然；⚠ Anscombe 高斯行必须补齐 sqrt 变换的雅可比与 MLE 残差方差后才可与计数家族比 AIC/BIC（否则会把独立高斯误差模型伪造成最优，见 controls）。(D) 可辨识性——对数尺度灵敏度矩阵的对数-尺度 SVD、Belsley 条件指数与方差分解比例、估计量相关阵、共线参数集，以及『rho 在源盒内自由拟合落在哪里』。(E) 剖面似然——rho（lag 1 与 lag 2 两个分支各自）与 m0 的逐点约束重优化剖面，Wilks 区间用 chi2_1(0.95)=3.8415（自实现，无 Statistics Toolbox）；同时把『剖面上相位惩罚恰好为 0』作为导出量测量并报告。(F) 留出检验——三种按时间划分，留出块只用于评分，轨迹始终全窗口积分；🔴 留出拟合必须【关闭相位惩罚】且【不使用任何 warm start】，因为二者都源自全数据拟合（见 honesty）。(G) 干扰输入——初值 I_h0/E_v0/I_v0 与输入病例漏报系数 lambda_scale 的敏感性，含两次重拟合。(H) 合成回收——给定真值生成周计数（泊松与 NB2 两种噪声，各 3 次重复）并重估，写入 data/synthetic/ 并带 generator/truth 清单。",
+
+  "parameter_domain": {
+    "scan_kind": "verification+optimisation+profile",
+    "fitted_parameters": ["m0", "rho", "d_weeks", "onset_doy", "offset_doy", "mu_s", "gamma", "beta"],
+    "box": {
+      "m0": [9.118819655545162e-04, 20.085536923187668],
+      "rho": [0.02, 0.80],
+      "rho_profile_relaxed_upper": 1.00,
+      "d_weeks": [0.0, 3.0],
+      "onset_doy": [40.0, 280.0],
+      "offset_doy": [80.0, 365.0],
+      "mu_s": [0.25, 15.0],
+      "gamma": [-3.0, 2.0],
+      "beta": [-3.0, 3.0]
+    },
+    "box_provenance": "code/dengue_fit.py Spec.bounds()（log_m0 in [-7,3] => m0 in [exp(-7),exp(3)]）；rho 来自源模型 run_01_parameter_estimation.m 的 rho = 0.02 + sigmoid(x2)*0.78 硬约束。",
+    "d_weeks_note": "d_weeks 在观测层被 round() 离散化为 {0,1,2,3}，因此它不是一个连续自由参数：拟合对 d 做离散循环，其余参数连续优化。既有 Python 拟合把 d 当作连续量交给 differential_evolution（报告连续值 1.51002），该连续值不具统计含义。",
+    "rho_profile_grid": [0.02, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 1.00],
+    "rho_profile_grid_note": "仅用于刻画似然形状与可辨识性。rho 在剖面的每一点都是被固定的，因此『剖面』本身不需要放宽盒约束；源约束上界 0.80 才是主口径的可行域。放宽到 1.00 的自由拟合一并在分块 B 给出。",
+    "m0_profile_grid": [0.6, 0.8, 1.0, 1.2, 1.4, 1.6637, 2.0, 2.4, 3.0, 4.0, 6.0],
+    "sensitivity_log_step": 1e-4
+  },
+
+  "termination": {
+    "t0_date": "2025-02-03",
+    "t_end_days": 329,
+    "t_end_date": "2025-12-28",
+    "events": []
+  },
+
+  "report_grid": {"kind": "weekly_edges", "weekly_edges_days": 7.0},
+
+  "solvers": [
+    {"id": "fit_propagation", "kind": "fixed_step", "method": "euler", "dt_days": 1.0,
+     "mu_variant": "day", "clamp_nonnegative": true,
+     "note": "与既有拟合完全同口径的步进口径（显式欧拉 dt=1 + day 死亡率变体 + 非负钳制），保证似然可与 code/ 的既有重拟合结果逐项比较。这不是 ODE 的数值参考解；参考解属 C5/T11.01。"},
+    {"id": "equivalence_reference", "kind": "fixed_step", "method": "euler", "dt_days": 1.0,
+     "mu_variant": "day", "clamp_nonnegative": true,
+     "note": "规范路径：mwspm_rhs + mwspm_integrate_fixed + mwspm_observe。仅用于测量快速核算核 mwspm_calib_kernel 与规范路径的最大偏差（证据，不是假设）。"}
+  ],
+
+  "objective": {
+    "kind": "poisson_nll",
+    "formula": "nll = sum_w [ rho*dC_{w-d} - Y_w*log(rho*dC_{w-d}) ]",
+    "phase_penalty": {"enabled": true, "pi": 300.0, "target_peak_week": 37,
+                      "disabled_in_blocks": ["F"],
+                      "note": "与既有拟合一致地保留相位软惩罚 J = nll + 300*(peak_week-37)^2。⚠ 实测更正：既有 rho 剖面的 11 行【全部】peak_week=37，故惩罚项在那些点恰好为 0，J 与 nll 逐位相同。因此『把惩罚项当似然算 AIC/BIC』这一先前的怀疑【不成立】，不得写入报告；保留的正当结论只有两条：① 峰值周=37 是既有流程显式施加的约束（refit_v3.constraint 自陈），故任何『rho 不可辨识』的说法都以该锚点为条件；② 目标 J 不是纯似然，这一点在方法学上仍须声明。⚠ 惩罚的目标周 37 是【全窗口】的性质，peak_week 也在全窗口上求（mwspm_calib_kernel 末行的 find(Yhat==max(Yhat),1)），因此在只评分的训练子块上保留它会把留出期的峰值信息喂给拟合 ⇒ 分块 F 一律关闭，并在结果中记录每行的『启动偏移』(J-nll)。"},
+    "families_compared": ["poisson", "quasipoisson", "negbin", "gaussian_sqrt"]
+  },
+
+  "optimiser": {
+    "algorithm": "two_stage_bounded_multistart_nelder_mead",
+    "stage1": "在参数盒内按多个种子各均匀抽样 n_screen 个点直接评分（目标函数 ~0.44 ms，筛选便宜），并分种子记录各自达到的最好目标值 screen_best_by_seed",
+    "stage2": "把最好的 n_seed 个点连同调用方 warm start 提升为 Nelder-Mead（fminsearch，盒约束由 sigmoid 重参数化保证）",
+    "n_screen": 700,
+    "n_seed": 5,
+    "restarts": 1,
+    "maxFunEvals": 3000,
+    "maxIter": 3000,
+    "seeds": [13, 47],
+    "seed_note": "固定种子使搜索可复现。⚠ 两个量【必须分开读】：screen_best_by_seed 的散布只刻画【随机筛选】离最优点有多远（7 维盒里几百个均匀点必然离得远，故该散布大是预期的，与优化器可靠性无关）；真正界定优化器可靠性的是 final_best_by_start（不同起点各自【最终】达到值的散布）、n_stage2_within_1nll（有多少次独立局部运行落在报告最优点 1 个 nll 单位内）与 best_start_J（调用方保证起点中最好的目标值——报告的最终值若比它差即证明精化起了反作用）。三者【都不是】置信区间；区间一律来自剖面似然。",
+    "holdout_search_note": "分块 F 的留出拟合使用 warm={} 并把 n_screen 提到 1500、n_seed 提到 12：所有可用的 warm start（参考估计与 11 行 legacy 剖面）都源自【全数据】拟合，保留它们会把留出周的信息泄漏进训练拟合。代价是留出拟合的搜索更弱，因此每一行都同时报告 start_spread 与 within1nll，搜索未收敛的行按『搜索受限』处理而不得读成模型性质。",
+    "warm_start_note": "🔴 实测驱动的修正：首次全量运行（results/runs/20261005T174546_7c1aa7c4）暴露本搜索本身的缺陷——不带 warm start 的 7 参数自由拟合只从盒中心起步，返回比【已知可行点】差约 50 个 nll 单位的解（D3 lag2 给 rho_hat=0.085/nll=-2016.87，而 rho=0.80 处已知 nll=-2067.17）。专用探针（work/t12_probe7.m，同设置只切换 warm={} 与 warm={thRef}+11 行 legacy 向量）实测：warm={} 复现坏值；warm 非空即回到 anchor 或更好（0.80/lag2 恰为 -2067.1661；1.00/lag1 为 -2069.0301，与 E1 剖面的极小值一致）。因此本实验的所有拟合都以『参考估计 + 全部 11 行 legacy 剖面向量』为初始起点。起点【不偏置】报告的最优点：每个候选目标值都被求值并比较，最好者胜出；起点只防止搜索错过好的区域。",
+    "sweep_note": "剖面按网格【单向升序】扫描并逐点续算（下一点的起点取上一点的解），不做双向扫描；起点集另行注入上面的 warm start 集合。此为实测口径，不得写成『双向扫描取最优』。"
+  },
+
+  "metrics": [
+    "nll", "nll_full", "objective_J", "AIC", "BIC",
+    "pearson_dispersion", "nb2_theta_hat",
+    "R2_log", "R2_raw", "RMSE_log", "peak_week_model", "true_total", "reported_total",
+    "kernel_vs_canonical_max_abs_diff",
+    "sensitivity_svd", "condition_number", "collinearity_sets", "estimate_correlation",
+    "profile_dnll", "profile_ci95_low", "profile_ci95_high", "profile_ci_connected",
+    "holdout_nll", "holdout_rmse_raw", "holdout_nll_delta",
+    "sensitivity_I_h0", "sensitivity_lambda_scale",
+    "synthetic_recovery_bias", "synthetic_recovery_rmse"
+  ],
+
+  "controls": [
+    "既有估计（output/results/refit_v3.json headline）：rho=0.7999999998, m0=1.6637002, d=2, R2_log=0.9761926, R2_raw=0.9513054, nll=-2067.1660666, 真感染=954.269, 报告总量=763.415, 峰值周=37",
+    "既有 rho 剖面（output/results/refit_v3.json profile.poisson）：🔴 实测裁定——该剖面【不是同一个模型的剖面】：11 行里 10 行用整数滞后 d=2，而 rho=0.30 那一行用 d=1（其 params.d=1.408178736494408，round→1）。MATLAB 把每行自带的参数向量在 round(d) 上重放，11/11 行【逐位】复现既有 nll（含 rho=0.30 行的 -2068.9738）；而若按 ceil(d)=2 计算，该行只给 -2027.5577。因此该行之所以是整表的极小值，是因为它比较的是【另一个离散模型】。根因：code/dengue_fit.py:284 用 round(X[:,2]) 把连续 d 离散化，而 step12_rho_free.py 把 d 当连续量交给 differential_evolution（存储值 1.408..2.384 横跨 1.5 的取整边界），所以报告出的整数滞后是优化器停在哪一侧的偶然结果。⇒ 该剖面不得用于刻画 rho 的似然形状或推导 Wilks 区间。",
+    "🔴 同时更正：既有『BIC 最优』并非来自该 rho 剖面，而是来自 table_rho_free 的【模型比较】（M-WSPM+poisson 的 BIC=-4103.53 优于其余 7 行）。因此该剖面的滞后不一致【不推翻】主报告点的模型选择结论，只推翻『用该剖面读 rho 的可辨识性』。报告必须把这两件事分开写。",
+    "table_rho_free 的 8 行里有 7 行的 rho 落在盒边界上（上界 0.80 出现 3 次、下界 0.02 出现 4 次），且落向哪一侧取决于模型还有哪些自由度 —— 这是 rho 不被数据识别的直接证据，本实验用『源盒内自由拟合』复核。",
+    "既有第二代口径（rho 固定 1.00，output/results/refit_v2.json）—— 仅作对照，不作主口径",
+    "外部报告率证据 {0.13（Undurraga 扩张因子 7.6）, <0.25（Imai）, <0.10（2023 美属）} —— 仅用于披露，不作为主口径，也不作为先验",
+    "Anscombe 变换 + 独立高斯误差 —— 仅作对照，用于证明未默认高斯误差模型。🔴 实测缺陷与更正：在本次修正之前的各次全量运行（最近一次 `results/runs/20261005T200212_d45879fb`）里该行【缺少 sqrt 变换的雅可比】且把残差方差【固定为 1】，于是 nll_full 根本不是 y 的密度，报出 AIC 112 而泊松是 182 —— 即把一个独立高斯误差模型伪造成最优，恰是本对照要检验的结论。补齐两项修正（雅可比 sum(log(2*sqrt(y+3/8))) + MLE 残差方差，代价 1 个额外参数，记入 n_extra）后该行应在 AIC/BIC 上【劣于】泊松；修正后的数值以本运行的 likelihood_families.json 为准。",
+    "🔴 剖面 CSV 的列表头修正：profile_m0.csv 曾把第 7 列声明为 rho，而写入函数在该列放的其实是 th.m0（于是该列与第 2 列重复，优化器实际选到的 rho 从未被记录，m0–rho 脊因此不可读）。现两份剖面文件均显式同时输出 m0_of_theta 与 rho_of_theta；grid_value 是当次剖面被固定的那个参数。",
+    "🔴 留出检验的两条泄漏通道（在本次修正之前的各次全量运行里均开启）：① 相位惩罚的目标周 37 属全窗口性质，却在只评分训练子块时仍被施加；② 留出拟合沿用了源自全数据拟合的 warm start。二者都会把留出周的信息泄漏进训练拟合。修正后分块 F 关闭相位惩罚并禁用 warm start。"
+  ],
+
+  "outputs": [
+    "summary.json",
+    "estimate_certificate.json",
+    "lag_consistency.json",
+    "likelihood_families.json",
+    "identifiability.json",
+    "profile_rho.csv",
+    "profile_m0.csv",
+    "holdout.json",
+    "initial_value_sensitivity.json",
+    "synthetic_recovery.json",
+    "calibration_fit_trace.csv",
+    "synthetic/truth_forward_series.csv",
+    "synthetic/series_poisson_rep1.csv",
+    "synthetic/series_negbin_rep1.csv"
+  ],
+
+  "deterministic": false,
+  "rng": {"generator": "mt19937ar", "seed": 13, "seed_list": [13, 47, 97, 131],
+          "note": "目标函数是确定性的（无随机 ODE）；随机性只出现在搜索起点与合成数据的噪声抽样，二者都固定种子并记录。"},
+
+  "honesty": [
+    "rho 帽=0.800 触及源参数化硬上界 0.80，只能表述为『数据不能排除的最高报告率』，不得解释为真实报告率（义务 O1）。",
+    "与外部证据（≈0.13 / <0.25 / <0.10）的 3–8 倍差异必须在讨论中披露并引 Bastos 2019 正式版 p.2（义务 O2）。",
+    "所有绝对量（真实总感染、蚊人比）必须标注为『rho 帽下的条件估计』。",
+    "本实验给出的是【复核与诊断】结论：不得据此把 CL-03/CL-12 升级为 SUPPORTED，也不得在 G0 裁定前把结论写成对 C4 的支持。",
+    "泊松与负二项的对数似然不可与含相位惩罚的目标函数 J 混用同一个 AIC/BIC 公式；报告中必须区分『纯似然』与『含惩罚目标』。",
+    "同种『按时间留出』的划分必须显式声明 d 周观测滞后在分块边界处的影响：留出块只用于评分，模型轨迹仍在全窗口积分，因此留出块的信息不进入拟合。🔴 此外必须声明另两条泄漏通道已关闭：分块 F 的拟合关闭相位惩罚（其目标周 37 属全窗口）且不使用任何源自全数据拟合的 warm start；未关闭时留出成绩会被高估。",
+    "跨家族 AIC/BIC 只可在 nll_full 上比较，且参数计数必须含该家族自身的额外参数（Anscombe 高斯的 MLE 残差方差计 1 个）；在 sqrt 尺度上比较多于一个自由尺度的量、或遗漏变换雅可比，都会得出方向相反的模型选择结论。",
+    "合成回收的结论只能写成『本估计量在 47 周单季样本上无法回收 rho』，不得写成『rho 有偏』：每次回收的 nll_hat 都不劣于 nll_truth（实测），故失败源于似然面的平坦/脊状而非优化未收敛；同时必须报告每次拟合的相位惩罚贡献以证明该结论不受惩罚项污染。",
+    "合成数据必须落在 data/synthetic/ 且带 generator/truth 清单；不得把合成结果写成真实数据结论（分支 B 的标记义务）。"
+  ]
+}

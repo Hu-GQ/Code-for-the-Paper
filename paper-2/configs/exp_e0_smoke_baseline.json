@@ -1,0 +1,94 @@
+{
+  "experiment_id": "exp_e0_smoke_baseline",
+  "entry_function": "exp_e0_smoke_baseline",
+  "task": "T10.check",
+  "title": "T10 最小运行检查：基线模型端到端冒烟（管线自检，不承载主张）",
+  "kind": "PIPELINE_SMOKE_CHECK",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "claims": [],
+  "claim_note": "本实验不支撑任何 CLAIMS.csv 条目。它只验证：数据装载 -> 强迫构造 -> RHS -> 求解器选择 -> 运行目录/manifest/哈希 -> 观测映射 -> 指标计算 这条链路可跑通，并与既有 Python 口径（R2_log=0.9762 / R2_raw=0.9513 / 峰值周 37）对得上。它不构成对 CL-06/CL-07 的检验。",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "purpose": "确认 MATLAB 主计算实现与模型卡 v1.0 一致，且离线可复现；为 T11/T12/T13/T14 提供已验证的运行管线。",
+  "design": "两个求解器各跑一次同一模型：① ode15s（连续速率口径 mu_variant='raw'）作为数值参考；② 源保真固定步长（euler, dt=1 天, mu_variant='day', 逐步非负钳制）作为与初始化前 Python 重拟合口径的可比对象。两者都跑到 329 天，再在日网格上取值做周聚合。",
+  "initial_conditions": null,
+  "parameter_domain": {
+    "m0": [1.6637],
+    "rho": [0.8],
+    "d_weeks": [2],
+    "onset_doy": [180.668],
+    "offset_doy": [253.456],
+    "mu_s": [12.3044],
+    "gamma": [-1.5338],
+    "beta": [-1.8797],
+    "note": "本检查不扫描参数；单点取值来自模型卡 parameters_fitted。"
+  },
+  "termination": {
+    "t0_date": "2025-02-03",
+    "t_end_days": 329,
+    "t_end_date": "2025-12-28",
+    "events": [],
+    "event_note": "冒烟检查不设事件，termination_reason 应为 t_end_reached。"
+  },
+  "report_grid": {
+    "kind": "daily_plus_weekly_edges",
+    "daily_step_days": 1.0,
+    "weekly_edges_days": 7.0,
+    "note": "报告网格只用于输出采样；自适应求解器的内部步长由求解器自适应决定，报告网格不改变它。"
+  },
+  "solvers": [
+    {
+      "id": "ref_ode15s_raw",
+      "kind": "adaptive",
+      "method": "ode15s",
+      "RelTol": 1e-09,
+      "AbsTol": 1e-11,
+      "NonNegative": [1, 2, 3, 4, 5, 6, 7, 8],
+      "mu_variant": "raw",
+      "clamp_nonnegative": false
+    },
+    {
+      "id": "src_faithful_euler_dt1",
+      "kind": "fixed_step",
+      "method": "euler",
+      "dt_days": 1.0,
+      "mu_variant": "day",
+      "clamp_nonnegative": true
+    }
+  ],
+  "metrics": [
+    "weekly_true_incidence",
+    "weekly_reported_pred",
+    "R2_log",
+    "R2_raw",
+    "RMSE_log",
+    "poisson_nll",
+    "peak_week_model",
+    "peak_week_observed",
+    "reported_total_model",
+    "true_total_model",
+    "R0_daily_max",
+    "R0_gt1_window_weeks",
+    "max_mu_eff_times_dt_euler"
+  ],
+  "controls": [
+    "reference: ode15s, mu_variant='raw', RelTol 1e-9 / AbsTol 1e-11",
+    "legacy Python refit (gen3_rhohat) metric values from the model card reference_metrics",
+    "observed weekly local_reported (47 weeks, total 767)"
+  ],
+  "deterministic": true,
+  "outputs": [
+    "summary.json",
+    "daily_timeseries.csv",
+    "weekly_fit.csv",
+    "r0_daily.csv",
+    "solver_diagnostics.json"
+  ],
+  "honesty": [
+    "这是管线自检，不是对任何主张的检验；manifest 中 status 只能反映运行是否成功。",
+    "确定性 ODE：不得用多随机种子生成置信区间。",
+    "ode15s 是 MATLAB 中对 EXPERIMENT_PLAN 所称 'LSODA' 的实现，必须如实登记该替代，不得写 'LSODA 已用'。"
+  ],
+  "blocked_by": null
+}

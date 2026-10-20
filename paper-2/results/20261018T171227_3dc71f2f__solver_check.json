@@ -1,0 +1,7 @@
+{
+  "at_lag": 1,
+  "at_rho": 0.45,
+  "step_halving_max_weekly": 1.67992595834221E-7,
+  "ode15s_max_weekly": 1.3246713947978606E-6,
+  "ode15s_nll_difference": 4.4118678488302976E-8
+}

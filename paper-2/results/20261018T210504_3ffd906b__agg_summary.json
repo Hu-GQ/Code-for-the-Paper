@@ -1,0 +1,114 @@
+{
+  "question": "does tau* depend on the unstated weekly aggregation of R0(t)?",
+  "rule_used_in_profile": "arithmetic mean of the seven daily R0 values inside the week",
+  "alternatives": [
+    "median",
+    "midpoint",
+    "max"
+  ],
+  "fixed_latent": "first week with the rho-free latent cumulative reaching 1/log R0(w); equivalent to Eq. (12) and independent of rho by construction",
+  "no_refit": true,
+  "interpretation": "definitional sensitivity only; the expected-report curve and the fitted parameters are held at the profile row",
+  "rows": [
+    {
+      "lag": 1,
+      "rho": 0.8,
+      "aggregation": "mean",
+      "tau_star": 20,
+      "T0_at_tau": 0.93456114763318332,
+      "cum_reports_at_tau": 2.265387692899909,
+      "R0w_at_tau": 2.3537663656771128,
+      "n_weeks_R0gt1": 15
+    },
+    {
+      "lag": 1,
+      "rho": 0.8,
+      "aggregation": "median",
+      "tau_star": 20,
+      "T0_at_tau": 0.91287319635628883,
+      "cum_reports_at_tau": 2.265387692899909,
+      "R0w_at_tau": 2.4021253681243531,
+      "n_weeks_R0gt1": 14
+    },
+    {
+      "lag": 1,
+      "rho": 0.8,
+      "aggregation": "midpoint",
+      "tau_star": 20,
+      "T0_at_tau": 0.99759559223364624,
+      "cum_reports_at_tau": 2.265387692899909,
+      "R0w_at_tau": 2.2298362723404894,
+      "n_weeks_R0gt1": 14
+    },
+    {
+      "lag": 1,
+      "rho": 0.8,
+      "aggregation": "max",
+      "tau_star": 19,
+      "T0_at_tau": 1.03817075383123,
+      "cum_reports_at_tau": 1.2854931719503961,
+      "R0w_at_tau": 2.1610325630440004,
+      "n_weeks_R0gt1": 19
+    },
+    {
+      "lag": 1,
+      "rho": 0.8,
+      "aggregation": "fixed-latent",
+      "tau_star": 20,
+      "T0_at_tau": 1.1682014345414791,
+      "cum_reports_at_tau": 2.8317346161248862,
+      "R0w_at_tau": 2.3537663656771128,
+      "n_weeks_R0gt1": 15
+    },
+    {
+      "lag": 1,
+      "rho": 0.45,
+      "aggregation": "mean",
+      "tau_star": 19,
+      "T0_at_tau": 0.85470096215603242,
+      "cum_reports_at_tau": 1.0388015269655715,
+      "R0w_at_tau": 1.6929963273047328,
+      "n_weeks_R0gt1": 15
+    },
+    {
+      "lag": 1,
+      "rho": 0.45,
+      "aggregation": "median",
+      "tau_star": 19,
+      "T0_at_tau": 0.61071124388531883,
+      "cum_reports_at_tau": 1.0388015269655715,
+      "R0w_at_tau": 2.08933487839324,
+      "n_weeks_R0gt1": 16
+    },
+    {
+      "lag": 1,
+      "rho": 0.45,
+      "aggregation": "midpoint",
+      "tau_star": 19,
+      "T0_at_tau": 0.61071124388531883,
+      "cum_reports_at_tau": 1.0388015269655715,
+      "R0w_at_tau": 2.08933487839324,
+      "n_weeks_R0gt1": 15
+    },
+    {
+      "lag": 1,
+      "rho": 0.45,
+      "aggregation": "max",
+      "tau_star": 19,
+      "T0_at_tau": 0.50322985296553513,
+      "cum_reports_at_tau": 1.0388015269655715,
+      "R0w_at_tau": 2.445436363166293,
+      "n_weeks_R0gt1": 20
+    },
+    {
+      "lag": 1,
+      "rho": 0.45,
+      "aggregation": "fixed-latent",
+      "tau_star": 19,
+      "T0_at_tau": 1.8993354714578496,
+      "cum_reports_at_tau": 2.30844783770127,
+      "R0w_at_tau": 1.6929963273047328,
+      "n_weeks_R0gt1": 15
+    }
+  ]
+}

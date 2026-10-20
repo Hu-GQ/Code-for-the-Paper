@@ -1,0 +1,72 @@
+{
+  "experiment_id": "exp_r2_pure_profile",
+  "entry_function": "exp_r2_pure_profile",
+  "task": "T12.R2",
+  "title": "Major revision R2: pure Poisson reporting-ratio profile on the stable solver",
+  "kind": "EXPERIMENT",
+  "status": "READY",
+  "implementation": "IMPLEMENTED",
+  "model": "model_mwspm_gen3_rhohat",
+  "model_version": "gen3_rhohat",
+  "claims": [],
+  "decision": "protocols/decisions/2026-10-18_major_revision.md",
+  "solver": {
+    "solver": "rk4",
+    "dt": 0.025,
+    "fast": true
+  },
+  "mu_variant": "day",
+  "lags": [
+    1,
+    2
+  ],
+  "rho_grid": {
+    "from": 0.02,
+    "step": 0.01,
+    "to": 1.0
+  },
+  "phase_penalty": false,
+  "objective": "pure Poisson negative log likelihood; rho fixed per grid point; no peak penalty",
+  "free": [
+    "m0",
+    "onset_doy",
+    "offset_doy",
+    "mu_s",
+    "gamma",
+    "beta"
+  ],
+  "box_source": "mwspm_calib_theta('box'); rho overrides via C.fixed for each grid point",
+  "warm_run": "20261018T162026_4d17af05",
+  "optimiser": {
+    "n_screen": 0,
+    "n_seed": 0,
+    "restarts": 0,
+    "seed": 13,
+    "maxFunEvals": 700,
+    "maxIter": 700,
+    "TolX": 5e-05,
+    "TolFun": 1e-06,
+    "verbose": false
+  },
+  "acceptance": "Descriptive candidate profile only. Every fit is a conditional local candidate at fixed rho; no confidence set, no rho estimate, no global-optimum claim. Ranges of tau* are reported as grid descriptions.",
+  "deterministic": true,
+  "outputs": [
+    "rho_profile_pure.csv",
+    "profile_summary.json",
+    "solver_check.json"
+  ],
+  "rho_grid_note": "lag1 uses 0.01 step (99 points); lag2 uses 0.02 step (50 points) to bound runtime. Set per-lag below.",
+  "rho_grid_by_lag": {
+    "1": {
+      "from": 0.02,
+      "step": 0.01,
+      "to": 1.0
+    },
+    "2": {
+      "from": 0.02,
+      "step": 0.02,
+      "to": 1.0
+    }
+  },
+  "solver_note": "fast=true selects the inlined RK4 stages; verified bitwise identical to the dailyRhs path at three parameter points (max|diff| = 0.0)."
+}
