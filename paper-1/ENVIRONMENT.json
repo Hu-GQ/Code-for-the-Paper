@@ -1,0 +1,12 @@
+{
+  "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "sympy": "1.14.0",
+  "matplotlib": "3.11.2",
+  "original_julia_environment_reported_by_repository": {
+    "Julia": "1.10",
+    "DifferentialEquations.jl": "7.16",
+    "rerun_here": false
+  }
+}

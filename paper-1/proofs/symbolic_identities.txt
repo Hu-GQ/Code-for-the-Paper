@@ -1,0 +1,7 @@
+Exact SymPy identities PASS
+Characteristic polynomial
+B*C*E*d + C*E*d**2 + z**4 + z**3*(B + L + 2*d) + z**2*(B*G + B*L + B*d + C*E + F*L + L*d + d**2) + z*(B*C*E + B*F*L + B*G*L + B*G*d + 2*C*E*d + F*L*d)
+Delta2
+B*G*(B + d) + C*E*L + F*L*(L + d) + (B + d)*(L + d)*(B + L + 2*d)
+Delta3
+C**2*E**2*L*(B + 2*d) + C*E*(B*G*(L*(L + d) + (B + d)*(B + 2*d)) + F*L*(L*(B + d) + (B + 2*d)*(L + d)) + L*(B + d)**2*(B + L + 2*d)) + (B*G*(L + d) + F*L*(B + d))*(B*G*(B + d) + F*L*(L + d) + (B + d)*(L + d)*(B + L + 2*d))

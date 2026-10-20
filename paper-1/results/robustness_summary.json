@@ -1,0 +1,15 @@
+{
+  "integrations": 55,
+  "robustness_runs": 14,
+  "branch_runs": 19,
+  "multistart_runs": 10,
+  "fig7_runs": 6,
+  "solver_control_runs": 6,
+  "max_state_error": 1.8033325943633827e-08,
+  "max_infected_error": 1.8033325943633827e-08,
+  "max_physical_residual": 2.8062594026323495e-08,
+  "max_fig7_infected_error": 1.8033325943633827e-08,
+  "max_multistart_infected_error": 2.1316282072803006e-14,
+  "extended_horizon_runs": 2,
+  "elapsed_seconds": 295.1288514000189
+}

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use code from this repository, please cite the corresponding paper listed in README.md."
+title: "Code for the Papers"
+abstract: "Code and data accompanying the papers listed in README.md."
+authors:
+  - family-names: Hu
+    given-names: Guoqing
+    affiliation: Nanchang Jiaotong Institute
+type: software
+year: 2026
+license: MIT
+repository-code: "https://github.com/Hu-GQ/Code-for-the-Paper"

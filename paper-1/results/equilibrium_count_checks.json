@@ -1,0 +1,75 @@
+{
+  "cases": [
+    {
+      "theta_s": 2,
+      "theta_v": 40,
+      "count": 10,
+      "names": [
+        "P110",
+        "P112",
+        "P121",
+        "P122",
+        "P211",
+        "P212",
+        "P22",
+        "P41",
+        "P42",
+        "P52"
+      ],
+      "levels": {
+        "J00": 56.41995587716348,
+        "J01": 4.533333333333332,
+        "J10": 48.50603420458216,
+        "J11": 0.0
+      }
+    },
+    {
+      "theta_s": 30,
+      "theta_v": 40,
+      "count": 9,
+      "names": [
+        "P110",
+        "P112",
+        "P121",
+        "P122",
+        "P211",
+        "P212",
+        "P22",
+        "P41",
+        "P42"
+      ],
+      "levels": {
+        "J00": 56.41995587716348,
+        "J01": 4.533333333333332,
+        "J10": 48.50603420458216,
+        "J11": 0.0
+      }
+    },
+    {
+      "theta_s": 52,
+      "theta_v": 100,
+      "count": 8,
+      "names": [
+        "P110",
+        "P112",
+        "P121",
+        "P122",
+        "P211",
+        "P212",
+        "P22",
+        "P51"
+      ],
+      "levels": {
+        "J00": 56.41995587716348,
+        "J01": 4.533333333333332,
+        "J10": 48.50603420458216,
+        "J11": 0.0
+      }
+    }
+  ],
+  "maximum_residual": 3.744432753624408e-15,
+  "random_parameter_checks": 1000,
+  "general_upper_bound": 10,
+  "bound_is_attained": true,
+  "proof": "Four disease-free corners, at most three endemic corners, and at most three single-active equilibria. P42 and P51 cannot coexist under theta_s<theta_v. Collision duplicates cannot increase the count."
+}
