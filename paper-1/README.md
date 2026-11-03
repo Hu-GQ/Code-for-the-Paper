@@ -1,6 +1,6 @@
 # SVIR prevention compliance model
 
-Code and simulated data for **An SVIR epidemic model with an evolutionary game of prevention compliance under vaccination**, by Guoqing Hu, Zunhai Gao and Yakui Xue.
+Code and simulated data for **An SVIR epidemic model with an evolutionary game of prevention compliance under vaccination**.
 
 ## Reproduce
 
@@ -45,3 +45,21 @@ The behavioural derivatives use the exact logit identity `dz/dt = gain(x)*(I-the
 Baseline data can be regenerated with `julia src/recompute_all.jl` and `julia src/bifurcation_scan.jl`. The recorded baseline environment is Julia 1.10 with DifferentialEquations.jl 7.16. These Julia programs were not rerun for the submission preparation; terminal equilibria were checked independently with the Python implementation. Some generator outputs are diagnostics that are not needed in the deposited dataset.
 
 All data are simulated. Parameters illustrate this model under contact reassignment and are not fitted to observations. The stability results concern local equilibria on the stated open branches; numerical sampling does not establish global attraction. MIT licence applies to the code; generated data have no additional restrictions.
+
+## BMB reproducibility archive
+
+Version: bmb-reproducibility-2026-11-03.
+
+The complete download is `ESM_2.zip`. The extracted archive contains the same
+simulation data and computational scripts as this directory. Its SHA-256
+manifest lists every extracted file except the manifest itself.
+
+Run `python BMB_Figure3.py` after the other plotting commands to reproduce the
+current Figure 3. It uses the unchanged 48 samples at day 2000 and labels the
+vertical axis as I(2000). Squares mark samples within 0.05 of the susceptible
+threshold; circles mark the remaining samples. These independently initialised
+runs do not constitute a forward-and-reverse continuation test. Some samples
+near collisions may remain transient at this horizon.
+
+The six regime-diagram checkpoints use an initial horizon of 60000 days.
+The archived checks retain the existing horizon-extension procedure.

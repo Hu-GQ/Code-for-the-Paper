@@ -3,3 +3,6 @@
 *.jl text eol=lf
 *.py text eol=lf
 *.md text eol=lf
+
+# Preserve archived file bytes and checksums.
+paper-1/** -text
